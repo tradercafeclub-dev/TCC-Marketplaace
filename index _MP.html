@@ -1,0 +1,1557 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TCC Marketplace — USDT Platform</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0B0E11;--sur:#1E2329;--card:#2B3139;--hov:#363D47;
+  --gold:#F0B90B;--ok:#0ECB81;--err:#F6465D;--warn:#F0B90B;--inf:#1890FF;
+  --t1:#EAECEF;--t2:#848E9C;--t3:#5E6673;
+  --bdr:rgba(255,255,255,0.08);--bdg:rgba(240,185,11,0.3);
+  --fd:'Syne',sans-serif;--fm:'IBM Plex Mono',monospace;--fb:'Plus Jakarta Sans',sans-serif;
+  --r:8px;--rl:12px;--rxl:16px;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--bg);color:var(--t1);font-family:var(--fb);font-size:15px;line-height:1.6;min-height:100vh;}
+/* NAV */
+.nav{position:sticky;top:0;z-index:100;background:rgba(11,14,17,.96);backdrop-filter:blur(12px);border-bottom:1px solid var(--bdr);padding:0 2rem;display:flex;align-items:center;gap:1.5rem;height:60px;}
+.logo{font-family:var(--fd);font-size:20px;font-weight:800;color:var(--gold);cursor:pointer;white-space:nowrap;}
+.logo span{color:var(--t1);}
+.nav-links{display:flex;list-style:none;flex:1;}
+.nav-links a{color:var(--t2);font-size:13px;font-weight:500;padding:0 12px;height:60px;display:flex;align-items:center;cursor:pointer;transition:color .15s;white-space:nowrap;}
+.nav-links a:hover{color:var(--t1);}
+.nav-links a.active{color:var(--gold);border-bottom:2px solid var(--gold);}
+.nav-r{display:flex;align-items:center;gap:8px;margin-left:auto;}
+/* BELL */
+.bell-wrap{position:relative;}
+.bell-btn{width:36px;height:36px;border-radius:var(--r);background:transparent;border:1px solid var(--bdr);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:16px;}
+.bell-btn:hover{background:rgba(255,255,255,.06);}
+.bell-bdg{position:absolute;top:-4px;right:-4px;background:var(--err);color:#fff;font-size:9px;font-weight:700;width:16px;height:16px;border-radius:50%;display:flex;align-items:center;justify-content:center;border:2px solid var(--bg);}
+.notif-dd{position:absolute;top:calc(100% + 8px);right:0;width:340px;background:var(--sur);border:1px solid var(--bdr);border-radius:var(--rl);box-shadow:0 16px 48px rgba(0,0,0,.6);z-index:300;display:none;max-height:480px;overflow-y:auto;}
+.notif-dd.open{display:block;}
+.nd-head{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;border-bottom:1px solid var(--bdr);position:sticky;top:0;background:var(--sur);}
+.nd-head span{font-size:13px;font-weight:600;}
+.nd-link{font-size:12px;color:var(--gold);cursor:pointer;}
+.nd-item{display:flex;gap:10px;padding:11px 16px;border-bottom:1px solid rgba(255,255,255,.04);cursor:pointer;transition:background .12s;}
+.nd-item:hover{background:rgba(255,255,255,.03);}
+.nd-dot{width:7px;height:7px;border-radius:50%;background:var(--gold);flex-shrink:0;margin-top:5px;}
+.nd-dot.r{background:var(--t3);}
+.nd-text{font-size:12px;line-height:1.4;color:var(--t1);flex:1;}
+.nd-time{font-size:10px;color:var(--t3);margin-top:3px;}
+.nd-footer{padding:10px 16px;text-align:center;font-size:12px;color:var(--gold);cursor:pointer;border-top:1px solid var(--bdr);}
+/* ROLE SWITCH */
+.role-sw{display:flex;align-items:center;gap:6px;padding:5px 12px;border-radius:var(--r);border:1px solid var(--bdg);background:rgba(240,185,11,.08);font-size:12px;font-weight:600;color:var(--gold);cursor:pointer;}
+/* BUTTONS */
+.btn{display:inline-flex;align-items:center;gap:6px;padding:7px 16px;border-radius:var(--r);font-size:13px;font-weight:600;cursor:pointer;border:none;transition:all .15s;font-family:var(--fb);}
+.btn-ghost{background:transparent;color:var(--t2);border:1px solid var(--bdr);}
+.btn-ghost:hover{color:var(--t1);border-color:rgba(255,255,255,.2);}
+.btn-gold{background:var(--gold);color:#0B0E11;}
+.btn-gold:hover{background:#d4a30a;}
+.btn-sm{padding:5px 12px;font-size:12px;}
+.btn-ok{background:rgba(14,203,129,.15);color:var(--ok);border:1px solid rgba(14,203,129,.3);}
+.btn-err{background:rgba(246,70,93,.15);color:var(--err);border:1px solid rgba(246,70,93,.3);}
+.btn-inf{background:rgba(24,144,255,.15);color:var(--inf);border:1px solid rgba(24,144,255,.3);}
+.btn-warn{background:rgba(240,185,11,.15);color:var(--gold);border:1px solid rgba(240,185,11,.3);}
+.w100{width:100%;}
+/* PAGES */
+.page{display:none;padding:2rem;max-width:1400px;margin:0 auto;}
+.page.active{display:block;}
+/* HERO */
+.hero{text-align:center;padding:5rem 2rem 3rem;background:radial-gradient(ellipse 80% 50% at 50% -20%,rgba(240,185,11,.12),transparent);}
+.hero-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(240,185,11,.12);border:1px solid var(--bdg);color:var(--gold);padding:4px 14px;border-radius:50px;font-size:12px;font-weight:600;margin-bottom:1.5rem;}
+.hero h1{font-family:var(--fd);font-size:clamp(2.2rem,5vw,4rem);font-weight:800;line-height:1.1;margin-bottom:1rem;background:linear-gradient(135deg,#fff 0%,#F0B90B 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+.hero p{color:var(--t2);font-size:1.1rem;max-width:600px;margin:0 auto 2rem;}
+.hero-cta{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;}
+.hero-stats{display:flex;gap:2rem;justify-content:center;margin-top:3rem;flex-wrap:wrap;}
+.hs-num{font-family:var(--fm);font-size:1.6rem;font-weight:600;color:var(--gold);}
+.hs-lbl{font-size:12px;color:var(--t3);margin-top:2px;}
+/* SECTION TITLE */
+.stitle{font-family:var(--fd);font-size:1.5rem;font-weight:700;margin-bottom:1.5rem;}
+.stitle span{color:var(--gold);}
+.stitle-sm{font-family:var(--fd);font-size:1rem;font-weight:700;margin-bottom:1rem;}
+/* GRIDS */
+.g2{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px;}
+.g3{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;}
+.g4{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px;}
+/* CARD */
+.card{background:var(--sur);border:1px solid var(--bdr);border-radius:var(--rl);padding:1.25rem;transition:border-color .15s;}
+.card:hover{border-color:rgba(255,255,255,.15);}
+.clbl{font-size:12px;color:var(--t3);margin-bottom:6px;}
+.cval{font-family:var(--fm);font-size:1.5rem;font-weight:600;}
+.csub{font-size:12px;color:var(--t2);margin-top:4px;}
+.card-gold{border-color:var(--bdg);}
+/* PRODUCT CARD */
+.pc{background:var(--sur);border:1px solid var(--bdr);border-radius:var(--rl);overflow:hidden;transition:all .2s;cursor:pointer;}
+.pc:hover{border-color:var(--bdg);transform:translateY(-2px);}
+.pc-img{width:100%;aspect-ratio:4/3;background:var(--card);display:flex;align-items:center;justify-content:center;font-size:2.8rem;}
+.pc-body{padding:1rem;}
+.pc-price{font-family:var(--fm);font-size:1.1rem;font-weight:600;color:var(--gold);}
+.pc-name{font-size:13px;font-weight:600;margin:4px 0;line-height:1.3;}
+.pc-seller{font-size:11px;color:var(--t3);}
+.ff-badge{display:inline-block;background:rgba(240,185,11,.15);color:var(--gold);font-size:10px;font-weight:700;padding:2px 8px;border-radius:50px;border:1px solid var(--bdg);margin-top:6px;}
+/* BADGES */
+.bdg{display:inline-flex;align-items:center;gap:4px;padding:3px 8px;border-radius:50px;font-size:11px;font-weight:600;}
+.bdg-ok{background:rgba(14,203,129,.15);color:var(--ok);}
+.bdg-err{background:rgba(246,70,93,.15);color:var(--err);}
+.bdg-warn{background:rgba(240,185,11,.15);color:var(--warn);}
+.bdg-inf{background:rgba(24,144,255,.15);color:var(--inf);}
+.bdg-muted{background:rgba(255,255,255,.07);color:var(--t2);}
+.bdg-orange{background:rgba(255,140,0,.15);color:#FF8C00;}
+/* TABLE */
+.tbl{background:var(--sur);border:1px solid var(--bdr);border-radius:var(--rl);overflow:hidden;}
+.tbl.ox{overflow-x:auto;}
+table{width:100%;border-collapse:collapse;}
+th{background:var(--card);color:var(--t3);font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;padding:10px 16px;text-align:left;border-bottom:1px solid var(--bdr);}
+td{padding:12px 16px;border-bottom:1px solid rgba(255,255,255,.04);font-size:13px;}
+tr:last-child td{border-bottom:none;}
+tr:hover td{background:rgba(255,255,255,.02);}
+.mono{font-family:var(--fm);}
+/* WALLET ADDR */
+.waddr{font-family:var(--fm);font-size:12px;color:var(--t2);background:var(--card);padding:8px 12px;border-radius:var(--r);border:1px solid var(--bdr);display:flex;align-items:center;gap:8px;}
+.waddr span{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.cpbtn{cursor:pointer;color:var(--gold);font-size:11px;white-space:nowrap;}
+/* PROGRESS */
+.pbar{background:var(--card);border-radius:50px;height:6px;overflow:hidden;}
+.pfill{height:100%;border-radius:50px;background:var(--gold);transition:width .5s;}
+/* RIGHTS DOTS */
+.rdots{display:flex;gap:8px;align-items:center;}
+.rdot{width:16px;height:16px;border-radius:50%;transition:all .3s;}
+.rdot.g{background:var(--ok);box-shadow:0 0 6px rgba(14,203,129,.5);}
+.rdot.o{background:#FF8C00;box-shadow:0 0 6px rgba(255,140,0,.5);}
+.rdot.y{background:#FFD700;box-shadow:0 0 6px rgba(255,215,0,.5);}
+.rdot.e{background:var(--card);border:1px solid var(--bdr);}
+/* RIGHTS ALERT */
+.ra{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 16px;border-radius:var(--r);border:1px solid;margin-bottom:1.5rem;flex-wrap:wrap;}
+.ra.sg{background:rgba(14,203,129,.1);border-color:rgba(14,203,129,.3);}
+.ra.so{background:rgba(255,140,0,.1);border-color:rgba(255,140,0,.3);}
+.ra.sy{background:rgba(255,215,0,.08);border-color:rgba(255,215,0,.3);}
+.ra .rat{font-size:13px;}
+.ra .ral{font-size:11px;color:var(--t3);margin-top:2px;}
+/* COUNTDOWN */
+.cd{display:flex;gap:6px;align-items:center;flex-wrap:wrap;}
+.cdu{text-align:center;}
+.cdn{font-family:var(--fm);font-size:1.1rem;font-weight:600;color:var(--gold);background:var(--card);padding:4px 8px;border-radius:var(--r);min-width:40px;display:block;}
+.cdl{font-size:9px;color:var(--t3);margin-top:2px;text-align:center;}
+.cds{font-family:var(--fm);color:var(--gold);font-size:1rem;margin-top:-4px;}
+/* ORDER TIMELINE */
+.otl{display:flex;flex-direction:column;gap:0;}
+.tli{display:flex;gap:12px;padding-bottom:16px;position:relative;}
+.tli:not(:last-child)::before{content:'';position:absolute;left:11px;top:24px;width:2px;bottom:0;background:var(--bdr);}
+.tldt{width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;flex-shrink:0;margin-top:1px;}
+.tldt.done{background:rgba(14,203,129,.2);border:2px solid var(--ok);}
+.tldt.act{background:rgba(240,185,11,.2);border:2px solid var(--gold);}
+.tldt.pend{background:var(--card);border:2px solid var(--bdr);}
+.tlc .tlt{font-size:13px;font-weight:600;}
+.tlc .tltime{font-size:11px;color:var(--t3);}
+/* FORM */
+.fg{margin-bottom:1.25rem;}
+.fl{font-size:12px;font-weight:600;color:var(--t2);margin-bottom:6px;display:block;}
+.fi{width:100%;background:var(--card);border:1px solid var(--bdr);border-radius:var(--r);padding:10px 14px;color:var(--t1);font-family:var(--fb);font-size:14px;transition:border-color .15s;}
+.fi:focus{outline:none;border-color:var(--gold);}
+.fi::placeholder{color:var(--t3);}
+select.fi option{background:var(--sur);}
+textarea.fi{resize:vertical;min-height:80px;}
+/* FILTER BAR */
+.fbar{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:1.5rem;}
+.fbtn{background:var(--card);border:1px solid var(--bdr);color:var(--t2);padding:6px 14px;border-radius:50px;font-size:12px;font-weight:500;cursor:pointer;transition:all .15s;}
+.fbtn.active{background:rgba(240,185,11,.15);color:var(--gold);border-color:var(--bdg);}
+/* MODAL */
+.mover{display:none;position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:200;align-items:center;justify-content:center;backdrop-filter:blur(4px);}
+.mover.open{display:flex;}
+.modal{background:var(--sur);border:1px solid var(--bdr);border-radius:var(--rxl);padding:2rem;width:90%;max-width:520px;max-height:90vh;overflow-y:auto;}
+.modal-lg{max-width:680px;}
+.mtitle{font-family:var(--fd);font-size:1.1rem;font-weight:700;margin-bottom:1.25rem;}
+.mclose{float:right;cursor:pointer;color:var(--t3);font-size:1.2rem;margin-top:-4px;}
+/* TABS */
+.tabs{display:flex;border-bottom:1px solid var(--bdr);margin-bottom:1.5rem;}
+.tab{padding:10px 16px;font-size:13px;font-weight:500;color:var(--t3);cursor:pointer;border-bottom:2px solid transparent;transition:all .15s;}
+.tab.active{color:var(--gold);border-bottom-color:var(--gold);}
+/* KYC STEPS */
+.kyc-steps{display:flex;align-items:center;gap:0;margin-bottom:2rem;}
+.ks-num{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;}
+.ks-num.done{background:var(--ok);color:#fff;}
+.ks-num.active{background:var(--gold);color:#0B0E11;}
+.ks-num.pend{background:var(--card);color:var(--t3);border:1px solid var(--bdr);}
+.ks-lbl{font-size:11px;font-weight:500;white-space:nowrap;}
+.ks-line{height:2px;flex:1;background:var(--bdr);min-width:12px;}
+.ks-line.done{background:var(--ok);}
+/* UPLOAD AREA */
+.uarea{border:2px dashed var(--bdr);border-radius:var(--rl);padding:2rem;text-align:center;cursor:pointer;transition:border-color .15s;}
+.uarea:hover{border-color:var(--gold);}
+/* PAYOUT OPTION */
+.popt{border:2px solid var(--bdr);border-radius:var(--rl);padding:1.25rem;cursor:pointer;transition:all .2s;}
+.popt.sel{border-color:var(--gold);background:rgba(240,185,11,.06);}
+.popt-pct{font-family:var(--fm);font-size:1.8rem;font-weight:700;color:var(--ok);}
+/* SHOP BANNER */
+.shop-banner{height:160px;background:linear-gradient(135deg,#1E2329,#2B3139);border-radius:var(--rl) var(--rl) 0 0;padding:1rem;display:flex;align-items:flex-end;}
+.shop-av{width:64px;height:64px;border-radius:50%;background:var(--card);border:3px solid var(--gold);display:flex;align-items:center;justify-content:center;font-size:2rem;flex-shrink:0;}
+/* CHART BAR */
+.chart-wrap{height:180px;background:var(--card);border-radius:var(--r);display:flex;align-items:flex-end;gap:6px;padding:1rem 1.5rem;}
+.cbar{flex:1;border-radius:3px 3px 0 0;}
+/* PAGINATION */
+.pag{display:flex;gap:6px;align-items:center;justify-content:center;margin-top:1rem;}
+.pbtn{width:32px;height:32px;border-radius:var(--r);border:1px solid var(--bdr);background:var(--card);color:var(--t2);font-size:12px;cursor:pointer;display:flex;align-items:center;justify-content:center;}
+.pbtn.active{background:rgba(240,185,11,.15);color:var(--gold);border-color:var(--bdg);}
+/* UTILITY */
+.d{height:1px;background:var(--bdr);margin:1.5rem 0;}
+.dsm{height:1px;background:var(--bdr);margin:.75rem 0;}
+.tg{color:var(--gold);}.tok{color:var(--ok);}.terr{color:var(--err);}.tm{color:var(--t3);}
+.tsm{font-size:12px;}.txs{font-size:11px;}
+.fl{display:flex;}.fc{display:flex;align-items:center;}
+.g4px{gap:.5rem;}.g8{gap:8px;}.g12{gap:12px;}.g16{gap:16px;}
+.btwn{justify-content:space-between;}
+.mb2{margin-bottom:.5rem;}.mb4{margin-bottom:1rem;}.mt2{margin-top:.5rem;}.mt4{margin-top:1rem;}.mt8{margin-top:2rem;}
+.alrt{padding:12px 16px;border-radius:var(--r);font-size:13px;margin-bottom:1rem;}
+.alrt-w{background:rgba(240,185,11,.1);border:1px solid rgba(240,185,11,.3);color:var(--gold);}
+.alrt-i{background:rgba(24,144,255,.1);border:1px solid rgba(24,144,255,.3);color:var(--inf);}
+.alrt-ok{background:rgba(14,203,129,.1);border:1px solid rgba(14,203,129,.3);color:var(--ok);}
+.alrt-err{background:rgba(246,70,93,.1);border:1px solid rgba(246,70,93,.3);color:var(--err);}
+.empty{text-align:center;padding:4rem 2rem;color:var(--t3);}
+.empty-ico{font-size:3rem;margin-bottom:1rem;}
+@keyframes spin{to{transform:rotate(360deg);}}
+@media(max-width:768px){.nav{padding:0 1rem;}.nav-links{display:none;}.page{padding:1rem;}.hero{padding:3rem 1rem 2rem;}}
+</style>
+</head>
+<body>
+
+<!-- ══ NAV ══ -->
+<nav class="nav">
+  <div class="logo" onclick="go('home')">TCC<span>Market</span></div>
+  <ul class="nav-links" id="mnav"></ul>
+  <div class="nav-r">
+    <div class="fc g8" style="font-size:13px;color:var(--t3);">
+      <span>💰</span><span id="nb" class="mono tg">—</span><span style="font-size:11px;">USDT</span>
+    </div>
+    <!-- Bell -->
+    <div class="bell-wrap">
+      <button class="bell-btn" onclick="toggleBell()">🔔<span class="bell-bdg" id="nbdg">3</span></button>
+      <div class="notif-dd" id="ndd">
+        <div class="nd-head"><span>🔔 การแจ้งเตือน</span><span class="nd-link" onclick="markAllRead()">อ่านทั้งหมด</span></div>
+        <div id="ndlist"></div>
+        <div class="nd-footer" onclick="go('notifications')">ดูทั้งหมด →</div>
+      </div>
+    </div>
+    <div class="role-sw" id="rsw" onclick="toggleRole()"><span id="rico">👤</span><span id="rlbl">Member</span></div>
+    <button class="btn btn-ghost btn-sm" onclick="go('profile')">Profile</button>
+    <button class="btn btn-gold btn-sm" onclick="openM('m-login')">Login / Register</button>
+  </div>
+</nav>
+
+<!-- ══════════ PAGES ══════════ -->
+
+<!-- HOME -->
+<div id="p-home" class="page active">
+  <div class="hero">
+    <div class="hero-badge">🔐 Powered by USDT · TRC20 / ERC20</div>
+    <h1>Marketplace ที่ปลอดภัย<br>บน Blockchain</h1>
+    <p>ซื้อขายสินค้าด้วย USDT รับ Funding Free ทุกการสั่งซื้อ พร้อมระบบ Referral Commission อัตโนมัติ</p>
+    <div class="hero-cta">
+      <button class="btn btn-gold" onclick="go('marketplace')">🛒 เลือกซื้อสินค้า</button>
+      <button class="btn btn-ghost" onclick="go('wallet')">💳 My Wallet</button>
+      <button class="btn btn-ghost" onclick="go('seller-apply')">🏪 สมัครเป็น Seller</button>
+    </div>
+    <div class="hero-stats">
+      <div><div class="hs-num">2,847,392</div><div class="hs-lbl">Volume (USDT)</div></div>
+      <div><div class="hs-num">1,247</div><div class="hs-lbl">สินค้าทั้งหมด</div></div>
+      <div><div class="hs-num">83</div><div class="hs-lbl">ร้านค้า</div></div>
+      <div><div class="hs-num">4,521</div><div class="hs-lbl">สมาชิก</div></div>
+    </div>
+  </div>
+  <div style="max-width:1400px;margin:0 auto;padding:2rem;">
+    <div class="stitle">สินค้า<span>แนะนำ</span></div>
+    <div class="g4" id="h-products"></div>
+  </div>
+</div>
+
+<!-- MARKETPLACE -->
+<div id="p-marketplace" class="page">
+  <div class="stitle">🛒 <span>Marketplace</span></div>
+  <div class="fbar">
+    <input class="fi" style="width:240px;" placeholder="🔍 ค้นหาสินค้า..." id="sq" oninput="filterP()">
+    <select class="fi" style="width:160px;" id="scat" onchange="filterP()"><option value="">ทุกหมวดหมู่</option></select>
+    <select class="fi" style="width:160px;" id="ssort" onchange="filterP()">
+      <option value="newest">ใหม่ล่าสุด</option>
+      <option value="pa">ราคา: ต่ำ→สูง</option>
+      <option value="pd">ราคา: สูง→ต่ำ</option>
+    </select>
+    <button class="fbtn active" onclick="setVM('grid',this)">⊞ Grid</button>
+    <button class="fbtn" onclick="setVM('list',this)">☰ List</button>
+  </div>
+  <div id="pgrid" class="g4"></div>
+  <div id="plist" style="display:none;"></div>
+</div>
+
+<!-- WALLET -->
+<div id="p-wallet" class="page">
+  <div class="stitle">💳 My <span>Wallet</span></div>
+  <div class="g2" style="margin-bottom:1.5rem;">
+    <div class="card" style="background:linear-gradient(135deg,#1E2329,#2B3139);">
+      <div class="clbl">ยอดคงเหลือทั้งหมด</div>
+      <div class="cval tg" id="wb">1,250.00 USDT</div>
+      <div class="csub">ถูกล็อค: 500.00 USDT (อยู่ระหว่างสั่งซื้อ)</div>
+      <div class="fc g8 mt4">
+        <button class="btn btn-gold btn-sm" onclick="openM('m-dep')">⬇ Deposit</button>
+        <button class="btn btn-ghost btn-sm" onclick="openM('m-wd')">⬆ Withdraw</button>
+        <button class="btn btn-ghost btn-sm" onclick="go('txh')">📋 TX History</button>
+      </div>
+    </div>
+    <div class="card">
+      <div class="clbl">Wallet Address (USDT)</div>
+      <div class="tsm tm mb2 mt2">TRC20</div>
+      <div class="waddr mb4"><span>TXr7YqwA8mPzKj9LnBvCd2Ew4FgHiJkM</span><span class="cpbtn" onclick="cp('TXr7YqwA8mPzKj9LnBvCd2Ew4FgHiJkM')">Copy</span></div>
+      <div class="tsm tm mb2">ERC20</div>
+      <div class="waddr"><span>0x742d35Cc6634C0532925a3b8D4C9Eb21A3f8e9F</span><span class="cpbtn" onclick="cp('0x742d35Cc6634C0532925a3b8D4C9Eb21A3f8e9F')">Copy</span></div>
+    </div>
+  </div>
+  <div class="stitle-sm">ประวัติธุรกรรม</div>
+  <div class="fbar">
+    <select class="fi" style="width:160px;" id="wtf" onchange="renderWTX()">
+      <option value="">ทุกประเภท</option>
+      <option>Deposit</option><option>Withdraw</option><option>Purchase</option>
+      <option>Funding Free</option><option>Commission</option><option>Refund</option>
+    </select>
+    <select class="fi" style="width:140px;" id="wsf" onchange="renderWTX()">
+      <option value="">ทุกสถานะ</option><option value="success">สำเร็จ</option><option value="pending">รอ</option>
+    </select>
+    <button class="btn btn-ghost btn-sm" onclick="exportCSV()">📥 Export CSV</button>
+  </div>
+  <div class="tbl ox"><table><thead><tr><th>เวลา</th><th>ประเภท</th><th>รายละเอียด</th><th>จำนวน</th><th>สถานะ</th></tr></thead><tbody id="wtb"></tbody></table></div>
+  <div class="pag" id="wpag"></div>
+</div>
+
+<!-- TX HISTORY FULL -->
+<div id="p-txh" class="page">
+  <div class="fc btwn mb4">
+    <div class="stitle" style="margin:0;">📋 Transaction <span>History</span></div>
+    <button class="btn btn-ghost btn-sm" onclick="go('wallet')">← กลับ</button>
+  </div>
+  <div class="fbar">
+    <select class="fi" style="width:160px;" id="thtype">
+      <option value="">ทุกประเภท</option>
+      <option>Deposit</option><option>Withdraw</option><option>Purchase</option>
+      <option>Funding Free</option><option>Commission</option><option>Refund</option>
+      <option>Payout 45d</option><option>Payout 60d</option>
+    </select>
+    <input type="date" class="fi" style="width:150px;" id="thdf">
+    <input type="date" class="fi" style="width:150px;" id="thdt">
+    <input class="fi" style="width:200px;" placeholder="🔍 TX ID / Order ID" id="thsq">
+    <button class="btn btn-gold btn-sm" onclick="initTXH()">ค้นหา</button>
+    <button class="btn btn-ghost btn-sm" onclick="exportCSV()">📥 Export CSV</button>
+  </div>
+  <div class="g4 mb4" id="ths"></div>
+  <div class="tbl ox"><table><thead><tr><th>TX ID</th><th>เวลา</th><th>ประเภท</th><th>รายละเอียด</th><th>จำนวน</th><th>สถานะ</th></tr></thead><tbody id="thb"></tbody></table></div>
+  <div class="pag" id="thpag"></div>
+</div>
+
+<!-- ORDERS -->
+<div id="p-orders" class="page">
+  <div class="stitle">📦 My <span>Orders</span></div>
+  <div class="fbar" id="ord-fbar">
+    <button class="fbtn active" onclick="filterOrd('all',this)">ทั้งหมด</button>
+    <button class="fbtn" onclick="filterOrd('paid',this)">รอยืนยัน</button>
+    <button class="fbtn" onclick="filterOrd('confirmed',this)">ยืนยันแล้ว</button>
+    <button class="fbtn" onclick="filterOrd('completed',this)">สำเร็จ</button>
+    <button class="fbtn" onclick="filterOrd('exchange_requested',this)">ขอเปลี่ยน</button>
+    <button class="fbtn" onclick="filterOrd('cancelled',this)">ยกเลิก</button>
+  </div>
+  <div class="tbl ox"><table><thead><tr><th>Order #</th><th>สินค้า</th><th>มูลค่า</th><th>สถานะ</th><th>FF Plan</th><th>วันที่</th><th>จัดการ</th></tr></thead><tbody id="ordb"></tbody></table></div>
+</div>
+
+<!-- ORDER DETAIL -->
+<div id="p-ord-det" class="page">
+  <div class="fc btwn mb4">
+    <div class="stitle" style="margin:0;">📦 Order <span id="od-id">Detail</span></div>
+    <button class="btn btn-ghost btn-sm" onclick="go('orders')">← กลับ</button>
+  </div>
+  <div class="g2">
+    <div>
+      <div class="card mb4" id="od-info"></div>
+      <div class="card mb4" id="od-cd-sec" style="display:none;">
+        <div class="clbl">⏰ เหลือเวลา (7 วัน)</div>
+        <div class="cd mt2" id="od-cd"></div>
+        <div class="fc g8 mt4" id="od-acts"></div>
+      </div>
+      <div class="card"><div style="font-size:13px;font-weight:600;margin-bottom:12px;">📋 Timeline</div><div class="otl" id="od-tl"></div></div>
+    </div>
+    <div><div class="card" id="od-ff"></div></div>
+  </div>
+</div>
+
+<!-- FUNDING FREE -->
+<div id="p-funding" class="page">
+  <div class="stitle">🎁 Funding <span>Free</span></div>
+  <div class="ra sg" id="ff-ra">
+    <div><div class="rat" id="ff-rt">Funding Free Rights: 3/5</div><div class="ral" id="ff-rl">สามารถสั่งซื้อได้อีก 3 รายการ</div></div>
+    <div class="fc g12">
+      <div class="rdots" id="ff-dots"></div>
+      <button class="btn btn-warn btn-sm" id="ff-rbtn" onclick="openM('m-refresh')" style="display:none;">🔄 ขอ Refresh</button>
+    </div>
+  </div>
+  <div class="g3" id="ff-list"></div>
+</div>
+
+<!-- REFERRALS -->
+<div id="p-referrals" class="page">
+  <div class="stitle">🤝 My <span>Referrals</span></div>
+  <div class="g3 mb4">
+    <div class="card">
+      <div class="clbl">รหัส Referral ของฉัน</div>
+      <div class="waddr mt2"><span class="mono tg">TCC-A8X2K</span><span class="cpbtn" onclick="cp('https://tccmarket.com/register?ref=TCC-A8X2K')">Copy Link</span></div>
+      <div class="txs tm mt2">tccmarket.com/register?ref=TCC-A8X2K</div>
+    </div>
+    <div class="card"><div class="clbl">Commission ทั้งหมด</div><div class="cval tok">348.50 USDT</div><div class="csub">Pending: 120.00 USDT</div></div>
+    <div class="card"><div class="clbl">สมาชิกที่แนะนำ</div><div class="cval">12</div><div class="csub">Buyers: 9 · Sellers: 3</div></div>
+  </div>
+  <div class="tabs">
+    <div class="tab active" onclick="switchRefTab('history',this)">ประวัติ Commission</div>
+    <div class="tab" onclick="switchRefTab('members',this)">สมาชิกที่แนะนำ</div>
+  </div>
+  <div id="rtab-hist">
+    <div class="tbl ox"><table><thead><tr><th>วันที่</th><th>จาก</th><th>Order #</th><th>ประเภท</th><th>Plan</th><th>รอบ</th><th>จำนวน</th><th>สถานะ</th></tr></thead><tbody id="rhb"></tbody></table></div>
+  </div>
+  <div id="rtab-mem" style="display:none;">
+    <div class="tbl ox"><table><thead><tr><th>ชื่อ</th><th>ประเภท</th><th>วันที่สมัคร</th><th>Commission รวม</th><th>สถานะ</th></tr></thead><tbody id="rmb"></tbody></table></div>
+  </div>
+</div>
+
+<!-- NOTIFICATIONS PAGE -->
+<div id="p-notifications" class="page">
+  <div class="fc btwn mb4">
+    <div class="stitle" style="margin:0;">🔔 Notification <span>Center</span></div>
+    <button class="btn btn-ghost btn-sm" onclick="markAllRead()">อ่านทั้งหมด</button>
+  </div>
+  <div class="fbar" id="nf-fbar">
+    <button class="fbtn active" onclick="filterNotifs('all',this)">ทั้งหมด</button>
+    <button class="fbtn" onclick="filterNotifs('order',this)">Order</button>
+    <button class="fbtn" onclick="filterNotifs('funding',this)">Funding</button>
+    <button class="fbtn" onclick="filterNotifs('wallet',this)">Wallet</button>
+    <button class="fbtn" onclick="filterNotifs('referral',this)">Referral</button>
+    <button class="fbtn" onclick="filterNotifs('system',this)">System</button>
+  </div>
+  <div id="nlist"></div>
+</div>
+
+<!-- PROFILE -->
+<div id="p-profile" class="page">
+  <div class="stitle">👤 My <span>Profile</span></div>
+  <div class="g2">
+    <div class="card">
+      <div class="clbl">ข้อมูลบัญชี</div><div class="d"></div>
+      <div style="font-size:13px;line-height:2.2;">
+        <div class="fc btwn"><span class="tm">Email</span><span>user@example.com</span></div>
+        <div class="fc btwn"><span class="tm">Role</span><span class="bdg bdg-inf">Member</span></div>
+        <div class="fc btwn"><span class="tm">Referral Code</span><span class="mono tg">TCC-A8X2K</span></div>
+        <div class="fc btwn"><span class="tm">สมาชิกตั้งแต่</span><span>2024-12-01</span></div>
+        <div class="fc btwn"><span class="tm">2FA</span>
+          <div class="fc g8"><span class="bdg bdg-ok">✓ เปิดใช้</span><button class="btn btn-ghost btn-sm" onclick="openM('m-2fa')">ตั้งค่า</button></div>
+        </div>
+      </div>
+      <div class="d"></div>
+      <button class="btn btn-ghost w100" onclick="go('seller-apply')">🏪 สมัครเป็น Seller</button>
+    </div>
+    <div class="card">
+      <div class="clbl">สถานะ KYC</div><div class="d"></div>
+      <div class="fc g12 mb4"><div style="font-size:2.5rem;">✅</div>
+        <div><div style="font-weight:600;color:var(--ok);">KYC Verified</div><div class="tsm tm">ยืนยันแล้วเมื่อ 2025-01-15</div></div>
+      </div>
+      <div style="font-size:13px;line-height:2.2;">
+        <div class="fc btwn"><span class="tm">ชื่อ-นามสกุล</span><span>สมชาย ใจดี</span></div>
+        <div class="fc btwn"><span class="tm">เอกสาร</span><span>บัตรประชาชน</span></div>
+        <div class="fc btwn"><span class="tm">สัญชาติ</span><span>ไทย</span></div>
+      </div>
+      <div class="d"></div>
+      <button class="btn btn-ghost btn-sm" onclick="go('kyc-wizard')">🪪 ดูข้อมูล KYC</button>
+    </div>
+  </div>
+</div>
+
+<!-- KYC WIZARD -->
+<div id="p-kyc-wizard" class="page">
+  <div class="fc btwn mb4">
+    <div class="stitle" style="margin:0;">🪪 KYC <span>Verification</span></div>
+    <button class="btn btn-ghost btn-sm" onclick="go('profile')">← กลับ</button>
+  </div>
+  <div class="kyc-steps" id="ksteps"></div>
+  <div class="card" id="kstep-content"></div>
+</div>
+
+<!-- SELLER APPLY -->
+<div id="p-seller-apply" class="page">
+  <div class="fc btwn mb4">
+    <div class="stitle" style="margin:0;">🏪 สมัครเป็น <span>Seller</span></div>
+    <button class="btn btn-ghost btn-sm" onclick="go('profile')">← กลับ</button>
+  </div>
+  <div class="g2">
+    <div>
+      <div class="alrt alrt-i mb4">ℹ️ ต้องผ่านการยืนยัน KYC ก่อนสมัครเป็น Seller</div>
+      <div class="card">
+        <div class="fg"><label class="fl">ชื่อร้านค้า *</label><input class="fi" placeholder="ชื่อร้านของคุณ"></div>
+        <div class="fg"><label class="fl">หมวดหมู่ *</label>
+          <select class="fi"><option>Electronics</option><option>Fashion</option><option>Luxury</option><option>Home &amp; Garden</option><option>Sports</option></select></div>
+        <div class="fg"><label class="fl">คำอธิบายร้าน</label><textarea class="fi" rows="3" placeholder="บอกเล่าเกี่ยวกับร้านของคุณ..."></textarea></div>
+        <div class="fg"><label class="fl">โลโก้ร้านค้า</label>
+          <div class="uarea" onclick="alert('Upload logo')"><div style="font-size:2rem;">🖼️</div><div class="tsm tm mt2">คลิกหรือลากไฟล์มาวาง</div></div></div>
+        <button class="btn btn-gold w100" onclick="submitSA()">📤 ส่งใบสมัคร</button>
+      </div>
+    </div>
+    <div class="card">
+      <div style="font-weight:600;margin-bottom:12px;">📋 สิทธิ์ของ Seller</div>
+      <div style="font-size:13px;line-height:2.2;">
+        <div>✅ เพิ่มสินค้าได้ไม่จำกัด</div>
+        <div>✅ Seller Wallet แยกจาก Member Wallet</div>
+        <div>✅ เลือก Payout Option 45/60 วัน</div>
+        <div>✅ Dashboard Analytics รายรายเดือน</div>
+        <div>✅ Order Management Panel</div>
+        <div>✅ Referral Commission จากยอดขาย</div>
+      </div>
+      <div class="d"></div>
+      <div class="alrt alrt-w" style="margin:0;">⚠️ Admin จะตรวจสอบภายใน 1-3 วันทำการ</div>
+    </div>
+  </div>
+</div>
+
+<!-- SELLER DASHBOARD -->
+<div id="p-seller-dashboard" class="page">
+  <div class="stitle">🏪 Seller <span>Dashboard</span></div>
+  <div class="g4 mb4">
+    <div class="card"><div class="clbl">📦 คำสั่งซื้อ</div><div class="cval mono">47</div><div class="csub">เดือนนี้ +12</div></div>
+    <div class="card"><div class="clbl">💰 รายได้ (USDT)</div><div class="cval tg mono">28,450.00</div><div class="csub">Pending: 4,200.00</div></div>
+    <div class="card"><div class="clbl">📋 รอ Payout</div><div class="cval" style="color:var(--warn)" id="s-pending">3</div><div class="csub">ถัดไป: 15 วัน</div></div>
+    <div class="card"><div class="clbl">⭐ Rating</div><div class="cval mono">4.8</div><div class="csub">จาก 127 รีวิว</div></div>
+  </div>
+  <div class="stitle-sm">📈 รายได้รายเดือน</div>
+  <div class="card mb4">
+    <div class="chart-wrap" id="echart"></div>
+    <div class="fc btwn mt2 tsm tm" id="echart-lbl"></div>
+  </div>
+  <div class="stitle-sm">🕐 Payout Countdown</div>
+  <div class="g3" id="s-payouts"></div>
+</div>
+
+<!-- SELLER SHOP -->
+<div id="p-seller-shop" class="page">
+  <div class="fc btwn mb4">
+    <div class="stitle" style="margin:0;">🏪 My <span>Shop</span></div>
+    <button class="btn btn-gold btn-sm" onclick="openM('m-editshop')">✏️ แก้ไขร้านค้า</button>
+  </div>
+  <div class="card mb4" style="padding:0;overflow:hidden;">
+    <div class="shop-banner">
+      <div class="fc g16" style="align-items:flex-end;">
+        <div class="shop-av">🖥️</div>
+        <div>
+          <div style="font-family:var(--fd);font-size:1.3rem;font-weight:700;">TechStore Pro</div>
+          <div class="tsm tm">Electronics · สมาชิกตั้งแต่ มค. 2024</div>
+          <div class="fc g8 mt2"><span class="bdg bdg-ok">✓ Verified</span><span class="tsm tg">⭐ 4.8 (127 รีวิว)</span><span class="tsm tm">📦 47 ยอดขาย</span></div>
+        </div>
+      </div>
+    </div>
+    <div style="padding:1.25rem;"><p class="tsm" style="color:var(--t2);">ร้านขายสินค้าเทคโนโลยีชั้นนำ MacBook, iPhone, Gadgets ทุกชนิด ราคาดีมีประกัน รับ Funding Free ทุกชิ้น</p></div>
+  </div>
+  <div class="stitle-sm">สินค้าในร้าน</div>
+  <div class="g4" id="shop-prods"></div>
+</div>
+
+<!-- SELLER PRODUCTS -->
+<div id="p-seller-products" class="page">
+  <div class="fc btwn mb4">
+    <div class="stitle" style="margin:0;">📦 จัดการ <span>สินค้า</span></div>
+    <button class="btn btn-gold btn-sm" onclick="openM('m-addprod')">+ เพิ่มสินค้าใหม่</button>
+  </div>
+  <div class="tbl ox"><table><thead><tr><th>สินค้า</th><th>ราคา (USDT)</th><th>Payout Option</th><th>Stock</th><th>สถานะ</th><th>ยอดขาย</th><th>จัดการ</th></tr></thead><tbody id="spr-b"></tbody></table></div>
+</div>
+
+<!-- SELLER ORDERS -->
+<div id="p-seller-orders" class="page">
+  <div class="stitle">📋 Order <span>Management</span></div>
+  <div class="fbar" id="sord-fbar">
+    <button class="fbtn active" onclick="filterSOrd('all',this)">ทั้งหมด</button>
+    <button class="fbtn" onclick="filterSOrd('paid',this)">รอยืนยัน</button>
+    <button class="fbtn" onclick="filterSOrd('confirmed',this)">จัดส่งแล้ว</button>
+    <button class="fbtn" onclick="filterSOrd('exchange_requested',this)">ขอเปลี่ยน</button>
+    <button class="fbtn" onclick="filterSOrd('completed',this)">สำเร็จ</button>
+  </div>
+  <div class="tbl ox"><table><thead><tr><th>Order #</th><th>สินค้า</th><th>ผู้ซื้อ</th><th>มูลค่า</th><th>Payout</th><th>สถานะ</th><th>วันที่</th><th>จัดการ</th></tr></thead><tbody id="sord-b"></tbody></table></div>
+</div>
+
+<!-- SELLER WALLET -->
+<div id="p-seller-wallet" class="page">
+  <div class="stitle">💼 Seller <span>Wallet</span></div>
+  <div class="g2 mb4">
+    <div class="card" style="background:linear-gradient(135deg,#1E2329,#2B3139);">
+      <div class="clbl">Seller Wallet Balance</div>
+      <div class="cval tg">4,850.00 USDT</div>
+      <div class="csub">Pending Payout: 2,100.00 USDT</div>
+      <div class="fc g8 mt4">
+        <button class="btn btn-gold btn-sm" onclick="openM('m-swd')">⬆ ถอน</button>
+        <button class="btn btn-ghost btn-sm" onclick="go('txh')">📋 ประวัติ</button>
+      </div>
+    </div>
+    <div class="card">
+      <div class="clbl">สรุปรายได้</div>
+      <div style="font-size:13px;line-height:2.2;">
+        <div class="fc btwn"><span class="tm">รายได้รวม</span><span class="mono tg">28,450.00</span></div>
+        <div class="fc btwn"><span class="tm">Payout 45d (จ่ายแล้ว)</span><span class="mono">12,600.00</span></div>
+        <div class="fc btwn"><span class="tm">Payout 60d (จ่ายแล้ว)</span><span class="mono">11,750.00</span></div>
+        <div class="fc btwn"><span class="tm">ค่าธรรมเนียม 10% (45d)</span><span class="mono terr">-1,400.00</span></div>
+      </div>
+    </div>
+  </div>
+  <div class="stitle-sm">ประวัติธุรกรรม Seller</div>
+  <div class="tbl ox"><table><thead><tr><th>เวลา</th><th>ประเภท</th><th>รายละเอียด</th><th>จำนวน</th><th>สถานะ</th></tr></thead><tbody id="swb"></tbody></table></div>
+</div>
+
+<!-- SELLER ANALYTICS -->
+<div id="p-seller-analytics" class="page">
+  <div class="stitle">📈 <span>Analytics</span></div>
+  <div class="g4 mb4">
+    <div class="card"><div class="clbl">ยอดขายวันนี้</div><div class="cval tg mono">1,299.00</div><div class="csub tok">▲ +12% vs เมื่อวาน</div></div>
+    <div class="card"><div class="clbl">ยอดขาย 7 วัน</div><div class="cval mono">8,745.00</div><div class="csub tok">▲ +8%</div></div>
+    <div class="card"><div class="clbl">ยอดขาย 30 วัน</div><div class="cval mono">28,450.00</div><div class="csub terr">▼ -3%</div></div>
+    <div class="card"><div class="clbl">Conversion Rate</div><div class="cval mono">4.2%</div><div class="csub">จาก 1,120 views</div></div>
+  </div>
+  <div class="g2">
+    <div class="card"><div style="font-weight:600;margin-bottom:12px;">🏆 สินค้าขายดี</div><div id="top-prods"></div></div>
+    <div class="card"><div style="font-weight:600;margin-bottom:12px;">💳 Payout History</div><div id="pay-hist"></div></div>
+  </div>
+</div>
+
+<!-- ══════ MODALS ══════ -->
+
+<!-- LOGIN/REGISTER -->
+<div class="mover" id="m-login">
+  <div class="modal">
+    <span class="mclose" onclick="closeM('m-login')">✕</span>
+    <div class="tabs mb4">
+      <div class="tab active" onclick="swAuthTab('login',this)">เข้าสู่ระบบ</div>
+      <div class="tab" onclick="swAuthTab('register',this)">สมัครสมาชิก</div>
+    </div>
+    <div id="auth-login">
+      <div class="mtitle">🔐 เข้าสู่ระบบ</div>
+      <div class="fg"><label class="fl">Email</label><input type="email" class="fi" placeholder="your@email.com"></div>
+      <div class="fg"><label class="fl">Password</label><input type="password" class="fi" placeholder="••••••••"></div>
+      <div class="fg"><label class="fl">2FA Code <span class="tm tsm">(ถ้าเปิดใช้)</span></label><input class="fi" placeholder="6 หลัก"></div>
+      <button class="btn btn-gold w100" onclick="doLogin()">เข้าสู่ระบบ</button>
+    </div>
+    <div id="auth-reg" style="display:none;">
+      <div class="mtitle">📋 สมัครสมาชิก</div>
+      <div class="fg"><label class="fl">Email *</label><input type="email" class="fi" placeholder="your@email.com"></div>
+      <div class="fg"><label class="fl">Password *</label><input type="password" class="fi" placeholder="อย่างน้อย 8 ตัว"></div>
+      <div class="fg"><label class="fl">Confirm Password *</label><input type="password" class="fi"></div>
+      <div class="fg"><label class="fl">Referral Code <span class="tm tsm">(ไม่บังคับ)</span></label><input class="fi" placeholder="TCC-XXXXX" id="ref-code"></div>
+      <div class="alrt alrt-i tsm">ℹ️ ถ้าไม่มี Referral Code — Commission จะอยู่ใน TCC Fund</div>
+      <button class="btn btn-gold w100 mt4" onclick="doReg()">สมัครสมาชิก</button>
+    </div>
+  </div>
+</div>
+
+<!-- DEPOSIT -->
+<div class="mover" id="m-dep">
+  <div class="modal">
+    <span class="mclose" onclick="closeM('m-dep')">✕</span>
+    <div class="mtitle">⬇ Deposit USDT</div>
+    <div class="fg"><label class="fl">Network</label><select class="fi"><option>TRC20 (TRON)</option><option>ERC20 (Ethereum)</option></select></div>
+    <div class="card" style="text-align:center;padding:1.5rem;">
+      <div style="font-size:3.5rem;">📱</div>
+      <div class="tsm tm" style="margin:8px 0;">QR Code Wallet Address</div>
+      <div class="waddr" style="justify-content:center;font-size:11px;">TXr7YqwA8mPzKj9LnBvCd2Ew4FgHiJkM</div>
+    </div>
+    <div class="alrt alrt-i mt4 tsm">✅ ยืนยัน 12 confirmations · ขั้นต่ำ 10 USDT</div>
+  </div>
+</div>
+
+<!-- WITHDRAW -->
+<div class="mover" id="m-wd">
+  <div class="modal">
+    <span class="mclose" onclick="closeM('m-wd')">✕</span>
+    <div class="mtitle">⬆ Withdraw USDT</div>
+    <div class="fg"><label class="fl">Wallet Address ปลายทาง</label><input class="fi" placeholder="0x... หรือ T..."></div>
+    <div class="fg"><label class="fl">จำนวน USDT</label>
+      <div style="position:relative;"><input type="number" class="fi" placeholder="0.00">
+        <button class="btn btn-gold btn-sm" style="position:absolute;right:8px;top:50%;transform:translateY(-50%);">MAX</button></div></div>
+    <div class="fg"><label class="fl">Network Fee</label><div class="mono tsm tm">≈ 1.00 USDT (TRC20) / ≈ 5.00 USDT (ERC20)</div></div>
+    <div class="alrt alrt-w tsm">⚠️ ต้องยืนยัน 2FA ก่อนถอน</div>
+    <button class="btn btn-gold w100 mt4">ยืนยันการถอน</button>
+  </div>
+</div>
+
+<!-- BUY -->
+<div class="mover" id="m-buy">
+  <div class="modal modal-lg">
+    <span class="mclose" onclick="closeM('m-buy')">✕</span>
+    <div class="mtitle">🛒 ยืนยันการสั่งซื้อ</div>
+    <div id="buy-info"></div>
+    <div class="fg mt4">
+      <label class="fl">เลือก Funding Free Plan</label>
+      <div class="g3" style="gap:8px;" id="buy-plans">
+        <div class="card" style="cursor:pointer;border-color:var(--bdg);background:rgba(240,185,11,.05);" onclick="selPlan('A',this)">
+          <div style="font-weight:700;color:var(--gold);">Plan A</div>
+          <div class="txs tm">10% × 10 เดือน</div>
+          <div id="pa-amt" class="mono" style="font-size:11px;color:var(--ok);margin-top:4px;"></div>
+        </div>
+        <div class="card" style="cursor:pointer;" onclick="selPlan('B',this)">
+          <div style="font-weight:700;color:var(--gold);">Plan B</div>
+          <div class="txs tm">25% × 4 ครั้ง (2เดือน)</div>
+          <div id="pb-amt" class="mono" style="font-size:11px;color:var(--ok);margin-top:4px;"></div>
+        </div>
+        <div class="card" style="cursor:pointer;" onclick="selPlan('C',this)">
+          <div style="font-weight:700;color:var(--gold);">Plan C</div>
+          <div class="txs tm">50% × 2 ครั้ง (3เดือน)</div>
+          <div id="pc-amt" class="mono" style="font-size:11px;color:var(--ok);margin-top:4px;"></div>
+        </div>
+      </div>
+    </div>
+    <div class="alrt alrt-w tsm" id="buy-rw" style="display:none;"></div>
+    <button class="btn btn-gold w100" onclick="confirmBuy()">✅ ยืนยันสั่งซื้อ</button>
+  </div>
+</div>
+
+<!-- FF REFRESH -->
+<div class="mover" id="m-refresh">
+  <div class="modal">
+    <span class="mclose" onclick="closeM('m-refresh')">✕</span>
+    <div class="mtitle">🔄 ขอ Refresh Funding Free Rights</div>
+    <div class="alrt alrt-i mb4"><strong>คำขอจะถูกส่งให้ Admin พิจารณา</strong><br>เมื่ออนุมัติ คุณจะได้รับ 5/5 Rights คืน</div>
+    <div style="font-size:13px;color:var(--t2);">
+      <div class="fc btwn mb2"><span>Rights ปัจจุบัน</span><span class="terr" style="font-weight:700;">0/5</span></div>
+      <div class="fc btwn mb2"><span>ยอดซื้อทั้งหมด</span><span class="mono tg">4,798.00 USDT</span></div>
+      <div class="fc btwn"><span>Rights ที่เคยใช้</span><span>5 ครั้ง</span></div>
+    </div>
+    <button class="btn btn-gold w100 mt4" onclick="submitRefresh()">📤 ส่งคำขอ Refresh</button>
+  </div>
+</div>
+
+<!-- EXCHANGE REQUEST -->
+<div class="mover" id="m-exchange">
+  <div class="modal">
+    <span class="mclose" onclick="closeM('m-exchange')">✕</span>
+    <div class="mtitle">🔁 ขอเปลี่ยนสินค้า</div>
+    <div class="fg"><label class="fl">เหตุผล *</label>
+      <select class="fi"><option>สินค้าชำรุด/เสียหาย</option><option>ได้รับสินค้าผิด</option><option>ไม่ตรงตามที่สั่ง</option><option>อื่นๆ</option></select></div>
+    <div class="fg"><label class="fl">รายละเอียดเพิ่มเติม</label><textarea class="fi" placeholder="อธิบายปัญหา..."></textarea></div>
+    <div class="fg"><label class="fl">รูปภาพประกอบ</label>
+      <div class="uarea" onclick="alert('Upload')"><div style="font-size:2rem;">📷</div><div class="tsm tm mt2">อัพโหลดรูปสินค้าที่มีปัญหา (สูงสุด 5 รูป)</div></div></div>
+    <div class="alrt alrt-w tsm">⚠️ Countdown จะหยุดชั่วคราวและ Reset เมื่อได้รับสินค้าใหม่</div>
+    <button class="btn btn-warn w100 mt2" onclick="submitEx()">ส่งคำขอเปลี่ยน</button>
+  </div>
+</div>
+
+<!-- CANCEL ORDER -->
+<div class="mover" id="m-cancel">
+  <div class="modal">
+    <span class="mclose" onclick="closeM('m-cancel')">✕</span>
+    <div class="mtitle">❌ ยกเลิกคำสั่งซื้อ</div>
+    <div class="alrt alrt-err mb4"><strong>⚠️ ข้อควรทราบก่อนยกเลิก</strong><br>
+      <div class="tsm mt2" style="line-height:1.8;">• USDT จะคืนเข้า Wallet ทันที<br>• <strong>Funding Free Right ที่ใช้ไปจะไม่คืน</strong><br>• FF Schedule จะถูกยกเลิกทั้งหมด</div></div>
+    <div class="fg"><label class="fl">เหตุผลการยกเลิก</label>
+      <select class="fi"><option>เปลี่ยนใจ</option><option>ราคาสูงเกินไป</option><option>ซื้อผิดรายการ</option><option>อื่นๆ</option></select></div>
+    <div class="fc g8 mt4">
+      <button class="btn btn-ghost w100" onclick="closeM('m-cancel')">กลับ</button>
+      <button class="btn btn-err w100" onclick="confirmCancel()">ยืนยันยกเลิก</button>
+    </div>
+  </div>
+</div>
+
+<!-- 2FA -->
+<div class="mover" id="m-2fa">
+  <div class="modal">
+    <span class="mclose" onclick="closeM('m-2fa')">✕</span>
+    <div class="mtitle">🔐 ตั้งค่า 2FA</div>
+    <div class="alrt alrt-ok mb4"><span class="bdg bdg-ok">✓ เปิดใช้งาน</span> 2FA กำลังทำงาน</div>
+    <div style="text-align:center;padding:2rem;font-size:5rem;">🔐</div>
+    <div class="fg"><label class="fl">ยืนยัน 2FA Code เพื่อปิดการใช้งาน</label><input class="fi" placeholder="6 หลัก"></div>
+    <div class="fc g8">
+      <button class="btn btn-err w100">ปิดใช้งาน 2FA</button>
+      <button class="btn btn-gold w100" onclick="closeM('m-2fa')">ปิด</button>
+    </div>
+  </div>
+</div>
+
+<!-- ADD PRODUCT -->
+<div class="mover" id="m-addprod">
+  <div class="modal modal-lg">
+    <span class="mclose" onclick="closeM('m-addprod')">✕</span>
+    <div class="mtitle">📦 เพิ่มสินค้าใหม่</div>
+    <div class="fg"><label class="fl">ชื่อสินค้า *</label><input class="fi" placeholder="ชื่อสินค้า"></div>
+    <div class="g2" style="gap:12px;">
+      <div class="fg"><label class="fl">ราคา (USDT) *</label><input type="number" class="fi" placeholder="0.00" id="pp-price" oninput="updatePOPreview()"></div>
+      <div class="fg"><label class="fl">หมวดหมู่ *</label><select class="fi"><option>Electronics</option><option>Fashion</option><option>Luxury</option><option>Home</option></select></div>
+    </div>
+    <div class="g2" style="gap:12px;">
+      <div class="fg"><label class="fl">Stock</label><input type="number" class="fi" value="1"></div>
+      <div class="fg"><label class="fl">เวลาจัดส่ง</label><select class="fi"><option>1-3 วัน</option><option>3-7 วัน</option><option>7-14 วัน</option><option>14-30 วัน</option></select></div>
+    </div>
+    <div class="fg"><label class="fl">คำอธิบายสินค้า</label><textarea class="fi" rows="3" placeholder="อธิบายสินค้าของคุณ..."></textarea></div>
+    <div class="fg"><label class="fl">รูปภาพสินค้า (สูงสุด 10 รูป)</label>
+      <div class="uarea"><div style="font-size:2rem;">🖼️</div><div class="tsm tm mt2">คลิกหรือลากไฟล์มาวาง · JPG, PNG, WebP · สูงสุด 5MB/รูป</div></div></div>
+    <div class="fg">
+      <label class="fl">Payout Option *</label>
+      <div class="g2" style="gap:12px;" id="popt-cards">
+        <div class="popt sel" onclick="selPO(45,this)">
+          <div style="font-weight:700;">⚡ 45 วัน</div>
+          <div class="popt-pct">90%</div>
+          <div class="txs tm mt2">รับ 90% · ตัด 10% Marketing Fee</div>
+          <div class="mt2"><span class="bdg bdg-warn">ได้เร็วกว่า</span></div>
+        </div>
+        <div class="popt" onclick="selPO(60,this)">
+          <div style="font-weight:700;">🏆 60 วัน</div>
+          <div class="popt-pct">100%</div>
+          <div class="txs tm mt2">รับ 100% · ไม่มีค่าธรรมเนียม</div>
+          <div class="mt2"><span class="bdg bdg-ok">ได้เต็มจำนวน</span></div>
+        </div>
+      </div>
+      <div class="alrt alrt-i mt2 tsm" id="po-prev">📍 ราคา 1,000 USDT → คุณได้รับ 900 USDT (45 วัน)</div>
+    </div>
+    <div class="fg"><label class="fl">Variants <span class="tm tsm">(ไม่บังคับ)</span></label><input class="fi" placeholder="เช่น สี: ดำ,ขาว · ขนาด: S,M,L"></div>
+    <div class="alrt alrt-w tsm">⏳ สินค้าจะอยู่สถานะ "รอ Admin อนุมัติ" ก่อนแสดงในตลาด</div>
+    <button class="btn btn-gold w100 mt2" onclick="submitProd()">📤 ส่งสินค้าเพื่อตรวจสอบ</button>
+  </div>
+</div>
+
+<!-- EDIT SHOP -->
+<div class="mover" id="m-editshop">
+  <div class="modal">
+    <span class="mclose" onclick="closeM('m-editshop')">✕</span>
+    <div class="mtitle">✏️ แก้ไขข้อมูลร้านค้า</div>
+    <div class="fg"><label class="fl">ชื่อร้านค้า</label><input class="fi" value="TechStore Pro"></div>
+    <div class="fg"><label class="fl">หมวดหมู่</label><select class="fi"><option selected>Electronics</option><option>Fashion</option><option>Luxury</option></select></div>
+    <div class="fg"><label class="fl">คำอธิบายร้านค้า</label><textarea class="fi" rows="3">ร้านขายสินค้าเทคโนโลยีชั้นนำ...</textarea></div>
+    <div class="fg"><label class="fl">โลโก้</label><div class="uarea"><div style="font-size:2rem;">🖼️</div><div class="tsm tm mt2">เปลี่ยนโลโก้</div></div></div>
+    <button class="btn btn-gold w100" onclick="closeM('m-editshop');alert('บันทึกแล้ว')">💾 บันทึก</button>
+  </div>
+</div>
+
+<!-- SELLER WITHDRAW -->
+<div class="mover" id="m-swd">
+  <div class="modal">
+    <span class="mclose" onclick="closeM('m-swd')">✕</span>
+    <div class="mtitle">⬆ ถอนเงินจาก Seller Wallet</div>
+    <div class="alrt alrt-i mb4 tsm">💡 ถอนไปยัง Customer Wallet หรือ External Address</div>
+    <div class="fg"><label class="fl">ปลายทาง</label>
+      <select class="fi"><option>Customer Wallet ของฉัน</option><option>External Wallet Address</option></select></div>
+    <div class="fg"><label class="fl">จำนวน USDT</label>
+      <div style="position:relative;"><input type="number" class="fi" placeholder="0.00">
+        <button class="btn btn-gold btn-sm" style="position:absolute;right:8px;top:50%;transform:translateY(-50%);">MAX</button></div></div>
+    <div class="alrt alrt-w tsm">⚠️ ต้องยืนยัน 2FA ก่อนถอน</div>
+    <button class="btn btn-gold w100 mt4">ยืนยันการถอน</button>
+  </div>
+</div>
+
+<script>
+// ═══════════════════════════════════════
+// DEMO DATA
+// ═══════════════════════════════════════
+const D = {
+  role:'member', // member | seller
+  rights:3,
+  rights_status:'active', // active | exhausted | pending_refresh | refreshed
+  balance:1250,
+
+  products:[
+    {id:'P001',name:'MacBook Pro M3 (14")',price:3299,cat:'Electronics',seller:'TechStore TH',rating:4.8,ff:true,ico:'💻',po:45},
+    {id:'P002',name:'iPhone 16 Pro Max 256GB',price:1499,cat:'Electronics',seller:'iShop Bangkok',rating:4.9,ff:true,ico:'📱',po:60},
+    {id:'P003',name:'Sony WH-1000XM5',price:349,cat:'Electronics',seller:'AudioWorld',rating:4.7,ff:true,ico:'🎧',po:45},
+    {id:'P004',name:'Dyson V15 Detect',price:699,cat:'Appliances',seller:'CleanHome',rating:4.6,ff:false,ico:'🌀',po:60},
+    {id:'P005',name:'Rolex Datejust 41mm',price:12500,cat:'Luxury',seller:'LuxTime',rating:5.0,ff:true,ico:'⌚',po:60},
+    {id:'P006',name:'Canon EOS R5 Mark II',price:4299,cat:'Electronics',seller:'PhotoPro',rating:4.8,ff:true,ico:'📷',po:45},
+  ],
+
+  orders:[
+    {id:'ORD-10041',prod:'MacBook Pro M3',amt:3299,status:'confirmed',plan:'A',date:'2025-04-20',seller:'TechStore TH',del:'2025-04-25'},
+    {id:'ORD-10038',prod:'iPhone 16 Pro Max',amt:1499,status:'completed',plan:'B',date:'2025-03-15',seller:'iShop Bangkok'},
+    {id:'ORD-10029',prod:'Sony WH-1000XM5',amt:349,status:'paid',plan:'C',date:'2025-04-28',seller:'AudioWorld',del:'2025-05-01'},
+    {id:'ORD-10025',prod:'Dyson V15 Detect',amt:699,status:'exchange_requested',plan:'A',date:'2025-03-01',seller:'CleanHome'},
+  ],
+
+  txs:[
+    {id:'TX001',date:'2025-04-28 14:23',type:'Funding Free',desc:'Payout รอบ 3/10 · Plan A · ORD-10038',amt:'+149.90',status:'success'},
+    {id:'TX002',date:'2025-04-20 09:11',type:'Purchase',desc:'ซื้อ MacBook Pro M3 · ORD-10041',amt:'-3,299.00',status:'success'},
+    {id:'TX003',date:'2025-04-10 16:45',type:'Deposit',desc:'USDT เข้า TRC20',amt:'+5,000.00',status:'success'},
+    {id:'TX004',date:'2025-03-28 11:30',type:'Commission',desc:'Referral Commission รอบ 2/10 จาก สมชาย · Plan A',amt:'+14.99',status:'success'},
+    {id:'TX005',date:'2025-03-15 08:00',type:'Purchase',desc:'ซื้อ iPhone 16 Pro Max · ORD-10038',amt:'-1,499.00',status:'success'},
+    {id:'TX006',date:'2025-05-01 10:00',type:'Deposit',desc:'USDT เข้า TRC20',amt:'+2,000.00',status:'pending'},
+  ],
+
+  stxs:[
+    {id:'STX001',date:'2025-04-20',type:'Payout 45d',desc:'Payout ORD-10038 (หลังหัก 10%)',amt:'+1,349.10',status:'success'},
+    {id:'STX002',date:'2025-03-20',type:'Market Fee',desc:'Marketing Fee ORD-10038',amt:'-149.90',status:'success'},
+    {id:'STX003',date:'2025-05-10',type:'Payout 60d',desc:'Payout ORD-10029 (ไม่มี fee)',amt:'+349.00',status:'pending'},
+  ],
+
+  ff:[
+    {ord:'ORD-10041',prod:'MacBook Pro M3',plan:'A',done:2,total:10,next:'2025-06-20',next_amt:329.90,paid:659.80,ts:Date.now()+12*864e5},
+    {ord:'ORD-10038',prod:'iPhone 16 Pro Max',plan:'B',done:3,total:4,next:'2025-06-15',next_amt:374.75,paid:1124.25,ts:Date.now()+7*864e5},
+  ],
+
+  rh:[
+    {date:'2025-04-28',from:'สมชาย ใจดี',ord:'ORD-10038',type:'Buyer',plan:'A',round:'3/10',amt:'+14.99',st:'paid'},
+    {date:'2025-03-28',from:'สมชาย ใจดี',ord:'ORD-10038',type:'Buyer',plan:'A',round:'2/10',amt:'+14.99',st:'paid'},
+    {date:'2025-03-01',from:'TechStore TH',ord:'ORD-10035',type:'Seller',plan:'-',round:'-',amt:'+89.10',st:'paid'},
+    {date:'2025-06-20',from:'สมชาย ใจดี',ord:'ORD-10038',type:'Buyer',plan:'A',round:'4/10',amt:'+14.99',st:'pending'},
+  ],
+
+  rm:[
+    {name:'สมชาย ใจดี',type:'Buyer',joined:'2024-12-01',com:'44.97',st:'active'},
+    {name:'TechStore TH',type:'Seller',joined:'2024-11-15',com:'89.10',st:'active'},
+    {name:'มาลี รักดี',type:'Buyer',joined:'2025-01-10',com:'0.00',st:'active'},
+  ],
+
+  notifs:[
+    {id:1,type:'funding',txt:'🎁 Funding Free Payout รอบ 3/10 จำนวน 149.90 USDT',time:'2 ชม.ที่แล้ว',read:false},
+    {id:2,type:'order',txt:'📦 Order ORD-10041 ได้รับการยืนยันแล้ว',time:'1 วันที่แล้ว',read:false},
+    {id:3,type:'referral',txt:'💰 Referral Commission 14.99 USDT จากสมชาย ใจดี',time:'3 วันที่แล้ว',read:false},
+    {id:4,type:'wallet',txt:'✅ Deposit 5,000 USDT สำเร็จ',time:'1 สัปดาห์ที่แล้ว',read:true},
+    {id:5,type:'system',txt:'🪪 KYC ได้รับการยืนยันแล้ว',time:'2 สัปดาห์ที่แล้ว',read:true},
+  ],
+
+  sprods:[
+    {id:'P001',name:'MacBook Pro M3 (14")',price:3299,po:45,stock:5,st:'approved',sales:12,ico:'💻'},
+    {id:'P007',name:'MacBook Air M2',price:1799,po:60,stock:8,st:'approved',sales:7,ico:'💻'},
+    {id:'P008',name:'iPad Pro 12.9"',price:999,po:45,stock:3,st:'pending',sales:0,ico:'📱'},
+  ],
+
+  sords:[
+    {id:'ORD-10041',prod:'MacBook Pro M3',buyer:'สมชาย ใจดี',amt:3299,po:'45d',st:'confirmed',date:'2025-04-20'},
+    {id:'ORD-10055',prod:'MacBook Air M2',buyer:'มาลี รักดี',amt:1799,po:'60d',st:'paid',date:'2025-04-28'},
+    {id:'ORD-10060',prod:'MacBook Pro M3',buyer:'John Smith',amt:3299,po:'45d',st:'exchange_requested',date:'2025-05-01'},
+  ],
+
+  spayouts:[
+    {ord:'ORD-10038',prod:'iPhone 16 Pro Max',amt:1349.10,days:8,po:'45d'},
+    {ord:'ORD-10041',prod:'MacBook Pro M3',amt:2969.10,days:23,po:'45d'},
+    {ord:'ORD-10055',prod:'MacBook Air M2',amt:1799.00,days:42,po:'60d'},
+  ],
+};
+
+// ═══════════════════════════════════════
+// ROUTING & NAV
+// ═══════════════════════════════════════
+let curPage='home', curRole='member', selPlan_='A', selPO_=45, cdTimers={}, txPage=1;
+const TX_PP=5;
+const MNAV=[
+  {id:'marketplace',lbl:'Marketplace'},
+  {id:'orders',lbl:'My Orders'},
+  {id:'wallet',lbl:'My Wallet'},
+  {id:'funding',lbl:'Funding Free'},
+  {id:'referrals',lbl:'My Referrals'},
+];
+const SNAV=[
+  {id:'seller-dashboard',lbl:'Dashboard'},
+  {id:'seller-shop',lbl:'My Shop'},
+  {id:'seller-products',lbl:'Products'},
+  {id:'seller-orders',lbl:'Orders'},
+  {id:'seller-wallet',lbl:'Wallet'},
+  {id:'seller-analytics',lbl:'Analytics'},
+];
+
+function renderNav(){
+  const links=curRole==='seller'?SNAV:MNAV;
+  document.getElementById('mnav').innerHTML=links.map(l=>`<li><a id="na-${l.id}" onclick="go('${l.id}')">${l.lbl}</a></li>`).join('');
+  document.getElementById('rico').textContent=curRole==='seller'?'🏪':'👤';
+  document.getElementById('rlbl').textContent=curRole==='seller'?'Seller':'Member';
+  updNav();
+}
+function updNav(){document.querySelectorAll('.nav-links a').forEach(a=>a.classList.remove('active'));const e=document.getElementById('na-'+curPage);if(e)e.classList.add('active');}
+function toggleRole(){curRole=curRole==='member'?'seller':'member';renderNav();go(curRole==='seller'?'seller-dashboard':'home');}
+
+function go(pg){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  const el=document.getElementById('p-'+pg);
+  if(el){el.classList.add('active');curPage=pg;}
+  document.getElementById('ndd').classList.remove('open');
+  updNav();
+  initPg(pg);
+}
+function initPg(p){
+  const m={
+    'home':initHome,'marketplace':initMP,'wallet':initWallet,'txh':initTXH,
+    'orders':initOrders,'funding':initFF,'referrals':initRef,'notifications':initNotifs,
+    'kyc-wizard':initKYC,'seller-dashboard':initSD,'seller-shop':initSShop,
+    'seller-products':initSProds,'seller-orders':()=>filterSOrd('all',null),
+    'seller-wallet':initSW,'seller-analytics':initSA,
+  };
+  if(m[p]) m[p]();
+}
+
+// ═══════════════════════════════════════
+// NOTIFICATIONS
+// ═══════════════════════════════════════
+function renderBell(){
+  const unread=D.notifs.filter(n=>!n.read).length;
+  document.getElementById('nbdg').textContent=unread;
+  document.getElementById('ndlist').innerHTML=D.notifs.slice(0,8).map(n=>
+    `<div class="nd-item" onclick="markRead(${n.id})">
+      <div class="nd-dot ${n.read?'r':''}"></div>
+      <div><div class="nd-text">${n.txt}</div><div class="nd-time">${n.time}</div></div>
+    </div>`).join('');
+}
+function toggleBell(){document.getElementById('ndd').classList.toggle('open');}
+document.addEventListener('click',e=>{if(!e.target.closest('.bell-wrap'))document.getElementById('ndd').classList.remove('open');});
+function markRead(id){const n=D.notifs.find(x=>x.id===id);if(n)n.read=true;renderBell();if(curPage==='notifications')initNotifs();}
+function markAllRead(){D.notifs.forEach(n=>n.read=true);renderBell();if(curPage==='notifications')initNotifs();}
+function filterNotifs(t,btn){
+  document.querySelectorAll('#nf-fbar .fbtn').forEach(b=>b.classList.remove('active'));
+  if(btn)btn.classList.add('active');
+  initNotifs(t);
+}
+function initNotifs(ft){
+  const f=ft||'all';
+  const items=f==='all'?D.notifs:D.notifs.filter(n=>n.type===f);
+  document.getElementById('nlist').innerHTML=items.map(n=>
+    `<div class="card mb2 fc g12" style="cursor:pointer;" onclick="markRead(${n.id})">
+      <div class="nd-dot ${n.read?'r':''}" style="width:10px;height:10px;flex-shrink:0;margin-top:4px;"></div>
+      <div style="flex:1;"><div style="font-size:13px;${!n.read?'font-weight:600;':''}">${n.txt}</div>
+        <div class="txs tm mt2">${n.time}</div></div>
+    </div>`).join('')||'<div class="empty"><div class="empty-ico">🔔</div><p>ไม่มีการแจ้งเตือน</p></div>';
+}
+
+// ═══════════════════════════════════════
+// HOME
+// ═══════════════════════════════════════
+function initHome(){
+  document.getElementById('nb').textContent=D.balance.toLocaleString();
+  document.getElementById('h-products').innerHTML=D.products.slice(0,4).map(pcard).join('');
+}
+
+// ═══════════════════════════════════════
+// MARKETPLACE
+// ═══════════════════════════════════════
+let vm='grid';
+function initMP(){
+  const cats=[...new Set(D.products.map(p=>p.cat))];
+  document.getElementById('scat').innerHTML='<option value="">ทุกหมวดหมู่</option>'+cats.map(c=>`<option>${c}</option>`).join('');
+  filterP();
+}
+function filterP(){
+  const q=(document.getElementById('sq').value||'').toLowerCase();
+  const cat=document.getElementById('scat').value;
+  const sort=document.getElementById('ssort').value;
+  let ps=D.products.filter(p=>(!q||p.name.toLowerCase().includes(q))&&(!cat||p.cat===cat));
+  if(sort==='pa')ps.sort((a,b)=>a.price-b.price);
+  if(sort==='pd')ps.sort((a,b)=>b.price-a.price);
+  if(vm==='grid'){
+    document.getElementById('pgrid').style.display='';
+    document.getElementById('plist').style.display='none';
+    document.getElementById('pgrid').innerHTML=ps.map(pcard).join('')||'<div class="empty" style="grid-column:1/-1"><div class="empty-ico">🔍</div><p>ไม่พบสินค้า</p></div>';
+  }else{
+    document.getElementById('pgrid').style.display='none';
+    document.getElementById('plist').style.display='';
+    document.getElementById('plist').innerHTML=`<div class="tbl ox"><table><thead><tr><th>สินค้า</th><th>หมวดหมู่</th><th>ร้านค้า</th><th>ราคา (USDT)</th><th>FF</th><th></th></tr></thead><tbody>${
+      ps.map(p=>`<tr><td><strong>${p.ico} ${p.name}</strong></td><td>${p.cat}</td><td>${p.seller}</td><td class="mono tg">${p.price.toLocaleString()}</td><td>${p.ff?'<span class="ff-badge">✨ FF</span>':'-'}</td><td><button class="btn btn-gold btn-sm" onclick="openBuy('${p.id}')">ซื้อ</button></td></tr>`).join('')
+    }</tbody></table></div>`;
+  }
+}
+function setVM(m,btn){vm=m;document.querySelectorAll('.fbar .fbtn').forEach(b=>{if(b.textContent.includes('Grid')||b.textContent.includes('List'))b.classList.remove('active');});btn.classList.add('active');filterP();}
+function pcard(p){
+  return `<div class="pc" onclick="openBuy('${p.id}')">
+    <div class="pc-img">${p.ico}</div>
+    <div class="pc-body">
+      <div class="pc-name">${p.name}</div>
+      <div class="pc-seller">${p.seller}${p.rating?' ⭐'+p.rating:''}</div>
+      <div class="pc-price">${p.price.toLocaleString()} USDT</div>
+      ${p.ff?'<div class="ff-badge">✨ Funding Free</div>':''}
+    </div>
+  </div>`;
+}
+
+// ═══════════════════════════════════════
+// BUY MODAL
+// ═══════════════════════════════════════
+let buyProd=null;
+function openBuy(pid){
+  buyProd=D.products.find(x=>x.id===pid);if(!buyProd)return;
+  const r=D.rights;
+  document.getElementById('buy-info').innerHTML=`
+    <div class="card" style="text-align:center;">
+      <div style="font-size:2.5rem;margin-bottom:8px;">${buyProd.ico}</div>
+      <div style="font-weight:700;font-size:14px;">${buyProd.name}</div>
+      <div class="cval tg mt2">${buyProd.price.toLocaleString()} USDT</div>
+      <div class="tsm tm mt2">ร้านค้า: ${buyProd.seller} · Payout ${buyProd.po} วัน</div>
+      <div class="mt2"><span class="bdg ${r>2?'bdg-ok':r>0?'bdg-warn':'bdg-err'}">FF Rights: ${r}/5</span></div>
+    </div>`;
+  const pr=buyProd.price;
+  document.getElementById('pa-amt').textContent=`${(pr*.1).toFixed(2)} USDT × 10`;
+  document.getElementById('pb-amt').textContent=`${(pr*.25).toFixed(2)} USDT × 4`;
+  document.getElementById('pc-amt').textContent=`${(pr*.5).toFixed(2)} USDT × 2`;
+  const rw=document.getElementById('buy-rw');
+  if(r===0){rw.style.display='';rw.textContent='❌ Rights หมด — ไม่ได้รับ Funding Free รอบนี้';}
+  else if(r===1){rw.style.display='';rw.textContent='⚠️ นี่คือ Rights สุดท้ายของคุณ!';}
+  else rw.style.display='none';
+  document.querySelectorAll('#buy-plans .card').forEach((c,i)=>{c.style.borderColor=i===0?'var(--bdg)':'var(--bdr)';c.style.background=i===0?'rgba(240,185,11,.05)':'';});
+  selPlan_='A';
+  openM('m-buy');
+}
+function selPlan(p,el){
+  selPlan_=p;
+  document.querySelectorAll('#buy-plans .card').forEach(c=>{c.style.borderColor='var(--bdr)';c.style.background='';});
+  el.style.borderColor='var(--bdg)';el.style.background='rgba(240,185,11,.05)';
+}
+function confirmBuy(){
+  if(D.rights>0)D.rights--;
+  closeM('m-buy');updateFFStatus();
+  alert(`✅ สั่งซื้อสำเร็จ!\n${buyProd?.name}\nPlan: ${selPlan_} · Rights เหลือ ${D.rights}/5`);
+}
+
+// ═══════════════════════════════════════
+// WALLET TX
+// ═══════════════════════════════════════
+function initWallet(){renderWTX();}
+function renderWTX(){
+  const tf=document.getElementById('wtf').value;
+  const sf=document.getElementById('wsf').value;
+  let txs=D.txs.filter(t=>(!tf||t.type===tf)&&(!sf||t.status===sf));
+  const paged=txs.slice((txPage-1)*TX_PP,txPage*TX_PP);
+  const tb=document.getElementById('wtb');
+  if(tb)tb.innerHTML=paged.map(txRow).join('')||nodata(5);
+  renderPag('wpag',Math.ceil(txs.length/TX_PP),txPage,p=>{txPage=p;renderWTX();});
+}
+function txRow(t){
+  const plus=String(t.amt).startsWith('+'),minus=String(t.amt).startsWith('-');
+  const ac=plus?'tok':minus?'terr':'tg';
+  const sb=t.status==='success'?'<span class="bdg bdg-ok">✓</span>':t.status==='pending'?'<span class="bdg bdg-warn">⏳</span>':'<span class="bdg bdg-err">✗</span>';
+  return `<tr><td class="tsm tm">${t.date}</td><td><span class="bdg bdg-muted">${t.type}</span></td><td class="tsm">${t.desc}</td><td class="mono ${ac}" style="font-weight:600;">${t.amt} USDT</td><td>${sb}</td></tr>`;
+}
+
+// ═══════════════════════════════════════
+// TX HISTORY FULL
+// ═══════════════════════════════════════
+function initTXH(){
+  const el=document.getElementById('ths');
+  if(el){
+    const tin=D.txs.filter(t=>String(t.amt).startsWith('+')).reduce((s,t)=>s+parseFloat(t.amt.replace(/[+,]/g,'')),0);
+    const tout=D.txs.filter(t=>String(t.amt).startsWith('-')).reduce((s,t)=>s+parseFloat(t.amt.replace(/[-,]/g,'')),0);
+    el.innerHTML=`
+      <div class="card"><div class="clbl">💰 รับเข้า</div><div class="cval tok mono">${tin.toFixed(2)}</div></div>
+      <div class="card"><div class="clbl">💸 จ่ายออก</div><div class="cval terr mono">${tout.toFixed(2)}</div></div>
+      <div class="card"><div class="clbl">🎁 Funding Free</div><div class="cval tg mono">149.90</div></div>
+      <div class="card"><div class="clbl">🤝 Commission</div><div class="cval mono">14.99</div></div>`;
+  }
+  const tb=document.getElementById('thb');
+  if(tb)tb.innerHTML=D.txs.map(t=>`<tr>
+    <td class="mono txs tm">${t.id}</td>
+    <td class="tsm tm">${t.date}</td>
+    <td><span class="bdg bdg-muted">${t.type}</span></td>
+    <td class="tsm">${t.desc}</td>
+    <td class="mono ${String(t.amt).startsWith('+')?'tok':String(t.amt).startsWith('-')?'terr':'tg'}" style="font-weight:600;">${t.amt} USDT</td>
+    <td>${t.status==='success'?'<span class="bdg bdg-ok">✓ สำเร็จ</span>':'<span class="bdg bdg-warn">⏳ รอ</span>'}</td>
+  </tr>`).join('');
+}
+
+// ═══════════════════════════════════════
+// ORDERS
+// ═══════════════════════════════════════
+function initOrders(){filterOrd('all',document.querySelector('#ord-fbar .fbtn'));}
+function filterOrd(st,btn){
+  document.querySelectorAll('#ord-fbar .fbtn').forEach(b=>b.classList.remove('active'));
+  if(btn)btn.classList.add('active');
+  const rows=st==='all'?D.orders:D.orders.filter(o=>o.status===st);
+  document.getElementById('ordb').innerHTML=rows.map(o=>{
+    let acts='';
+    if(o.status==='paid'||o.status==='confirmed')acts=`<button class="btn btn-inf btn-sm" onclick="openOD('${o.id}')">📋 ดูรายละเอียด</button>`;
+    else if(o.status==='exchange_requested')acts=`<button class="btn btn-warn btn-sm" onclick="openOD('${o.id}')">🔁 ดูสถานะ</button>`;
+    return `<tr>
+      <td class="mono tg">${o.id}</td><td>${o.prod}</td>
+      <td class="mono">${o.amt.toLocaleString()} USDT</td>
+      <td>${sb(o.status)}</td>
+      <td><span class="bdg bdg-warn">Plan ${o.plan}</span></td>
+      <td class="tsm tm">${o.date}</td>
+      <td>${acts}</td>
+    </tr>`;
+  }).join('')||nodata(7);
+}
+
+// ═══════════════════════════════════════
+// ORDER DETAIL
+// ═══════════════════════════════════════
+function openOD(oid){
+  const o=D.orders.find(x=>x.id===oid);if(!o)return;
+  document.getElementById('od-id').textContent=oid;
+  document.getElementById('od-info').innerHTML=`
+    <div style="font-weight:600;margin-bottom:12px;">📦 ${o.prod}</div>
+    <div style="font-size:13px;line-height:2.2;">
+      <div class="fc btwn"><span class="tm">Order #</span><span class="mono tg">${o.id}</span></div>
+      <div class="fc btwn"><span class="tm">ร้านค้า</span><span>${o.seller}</span></div>
+      <div class="fc btwn"><span class="tm">มูลค่า</span><span class="mono tg">${o.amt.toLocaleString()} USDT</span></div>
+      <div class="fc btwn"><span class="tm">FF Plan</span><span class="bdg bdg-warn">Plan ${o.plan}</span></div>
+      <div class="fc btwn"><span class="tm">สถานะ</span><span>${sb(o.status)}</span></div>
+      <div class="fc btwn"><span class="tm">วันที่สั่ง</span><span>${o.date}</span></div>
+      ${o.del?`<div class="fc btwn"><span class="tm">วันที่จัดส่ง</span><span>${o.del}</span></div>`:''}
+    </div>`;
+  // 7-day countdown
+  const cds=document.getElementById('od-cd-sec');
+  const acts=document.getElementById('od-acts');
+  if(o.del&&(o.status==='confirmed'||o.status==='paid')){
+    cds.style.display='';
+    const deadline=new Date(o.del).getTime()+7*864e5;
+    startCD('od-cd',deadline);
+    acts.innerHTML=`
+      <button class="btn btn-ok w100" style="flex:1;" onclick="alert('✅ ยืนยันรับสินค้าแล้ว')">✅ ยืนยันรับ</button>
+      <button class="btn btn-warn" style="flex:1;" onclick="openM('m-exchange')">🔁 ขอเปลี่ยน</button>
+      <button class="btn btn-err" style="flex:1;" onclick="openM('m-cancel')">❌ ยกเลิก</button>`;
+  }else{cds.style.display='none';}
+  document.getElementById('od-tl').innerHTML=buildTL(o);
+  // FF schedule
+  const ff=D.ff.find(s=>s.ord===oid);
+  const ffe=document.getElementById('od-ff');
+  if(ff){
+    const pct=Math.round((ff.done/ff.total)*100);
+    ffe.innerHTML=`
+      <div style="font-weight:600;margin-bottom:12px;">🎁 Funding Free Schedule</div>
+      <div class="fc btwn mb2"><span class="tm">Plan</span><span class="bdg bdg-warn">Plan ${ff.plan}</span></div>
+      <div class="pbar mb2"><div class="pfill" style="width:${pct}%"></div></div>
+      <div class="tsm tm mb4">${ff.done}/${ff.total} รอบ · รับแล้ว ${ff.paid.toLocaleString()} USDT</div>
+      <div class="clbl">รอบถัดไป (${ff.next})</div>
+      <div class="mono tok" style="font-size:1.2rem;font-weight:700;">+${ff.next_amt} USDT</div>
+      <div class="dsm"></div>
+      <table style="width:100%;font-size:12px;">
+        <thead><tr><th style="padding:5px 0;">รอบ</th><th>วันที่</th><th>จำนวน</th><th>สถานะ</th></tr></thead>
+        <tbody>${genPTbl(ff)}</tbody>
+      </table>`;
+  }else{ffe.innerHTML='<div class="empty"><div class="empty-ico">🎁</div><p>ไม่มี Funding Free</p></div>';}
+  go('ord-det');
+}
+function genPTbl(ff){
+  return Array.from({length:ff.total},(_,i)=>i+1).map(i=>{
+    const done=i<=ff.done,cur=i===ff.done+1;
+    return `<tr><td style="padding:4px 0;">${i}/${ff.total}</td><td class="tm">${done?'2025-0'+Math.min(i+3,9)+'-20':ff.next}</td><td class="mono tg">+${ff.next_amt}</td>
+    <td>${done?'<span class="bdg bdg-ok">✓</span>':cur?'<span class="bdg bdg-warn">ถัดไป</span>':'<span class="bdg bdg-muted">รอ</span>'}</td></tr>`;
+  }).join('');
+}
+function buildTL(o){
+  const steps=[
+    {lbl:'สั่งซื้อสำเร็จ',time:o.date,done:true},
+    {lbl:'ชำระเงิน USDT',time:o.date,done:true},
+    {lbl:'Seller ยืนยันออเดอร์',time:o.date,done:['confirmed','completed','exchange_requested'].includes(o.status)},
+    {lbl:'จัดส่งสินค้า',time:o.del||'-',done:['confirmed','completed'].includes(o.status)},
+    {lbl:'ยืนยันรับสินค้า',time:o.status==='completed'?'2025-05-10':'-',done:o.status==='completed'},
+  ];
+  if(o.status==='exchange_requested')steps.push({lbl:'ขอเปลี่ยนสินค้า',time:'2025-05-02',done:true,act:true});
+  return steps.map(s=>`<div class="tli">
+    <div class="tldt ${s.done?'done':s.act?'act':'pend'}">${s.done?'✓':'○'}</div>
+    <div class="tlc"><div class="tlt">${s.lbl}</div><div class="tltime">${s.time||''}</div></div>
+  </div>`).join('');
+}
+
+// ═══════════════════════════════════════
+// FUNDING FREE
+// ═══════════════════════════════════════
+function initFF(){updateFFStatus();renderFFCards();}
+function updateFFStatus(){
+  const r=D.rights,st=D.rights_status;
+  const ra=document.getElementById('ff-ra');
+  const rte=document.getElementById('ff-rt');
+  const rle=document.getElementById('ff-rl');
+  const rb=document.getElementById('ff-rbtn');
+  if(!ra)return;
+  // dots
+  document.getElementById('ff-dots').innerHTML=Array.from({length:5},(_,i)=>{
+    let c='e';
+    if(i<r)c=r>=4?'g':r>=2?'o':'y';
+    return `<div class="rdot ${c}"></div>`;
+  }).join('');
+  if(st==='pending_refresh'){
+    ra.className='ra sy';rte.textContent='🟡 Rights: รอ Admin อนุมัติ Refresh';
+    rle.textContent='คำขอส่งแล้ว — กรุณารอการพิจารณา';rb.style.display='none';
+  }else if(r===0){
+    ra.className='ra so';rte.textContent='🟠 Rights: 0/5 — หมดแล้ว';
+    rle.textContent='ขอ Refresh จาก Admin เพื่อรับ 5 Rights ใหม่';rb.style.display='';
+  }else if(r>=4){
+    ra.className='ra sg';rte.textContent=`🟢 Funding Free Rights: ${r}/5`;
+    rle.textContent=`สามารถสั่งซื้อได้อีก ${r} รายการ`;rb.style.display='none';
+  }else{
+    ra.className='ra sy';rte.textContent=`🟡 Rights: ${r}/5 — เหลือน้อย`;
+    rle.textContent=`เหลืออีก ${r} ครั้ง — ใช้อย่างระมัดระวัง`;rb.style.display='none';
+  }
+}
+function renderFFCards(){
+  document.getElementById('ff-list').innerHTML=D.ff.map((s,i)=>{
+    const pct=Math.round((s.done/s.total)*100);
+    return `<div class="card">
+      <div class="fc btwn mb2"><div style="font-weight:600;font-size:13px;">${s.prod}</div><span class="bdg bdg-warn">Plan ${s.plan}</span></div>
+      <div class="mono tm txs mb2">${s.ord}</div>
+      <div class="clbl">Progress ${s.done}/${s.total} รอบ</div>
+      <div class="pbar mb2"><div class="pfill" style="width:${pct}%"></div></div>
+      <div class="tsm tm mb4">รับแล้ว ${s.paid.toLocaleString()} USDT</div>
+      <div class="clbl">รอบถัดไป (${s.next})</div>
+      <div class="mono tok" style="font-size:1.1rem;font-weight:700;">+${s.next_amt} USDT</div>
+      <div class="clbl mt2">Countdown</div>
+      <div class="cd mt2" id="ff-cd-${i}"></div>
+    </div>`;
+  }).join('');
+  D.ff.forEach((_,i)=>setTimeout(()=>startCD(`ff-cd-${i}`,D.ff[i].ts),50));
+}
+function submitRefresh(){D.rights_status='pending_refresh';closeM('m-refresh');updateFFStatus();alert('✅ ส่งคำขอ Refresh แล้ว!\nAdmin จะพิจารณาและแจ้งผลภายใน 1-3 วันทำการ');}
+
+// ═══════════════════════════════════════
+// REFERRALS
+// ═══════════════════════════════════════
+function initRef(){
+  document.getElementById('rhb').innerHTML=D.rh.map(h=>`<tr>
+    <td class="tsm tm">${h.date}</td><td>${h.from}</td>
+    <td class="mono tg">${h.ord}</td>
+    <td><span class="bdg ${h.type==='Buyer'?'bdg-inf':'bdg-warn'}">${h.type}</span></td>
+    <td><span class="bdg bdg-muted">${h.plan}</span></td>
+    <td>${h.round}</td>
+    <td class="mono ${h.st==='paid'?'tok':'tg'}">${h.amt} USDT</td>
+    <td>${h.st==='paid'?'<span class="bdg bdg-ok">จ่ายแล้ว</span>':'<span class="bdg bdg-warn">รอจ่าย</span>'}</td>
+  </tr>`).join('');
+  document.getElementById('rmb').innerHTML=D.rm.map(m=>`<tr>
+    <td>${m.name}</td>
+    <td><span class="bdg ${m.type==='Buyer'?'bdg-inf':'bdg-warn'}">${m.type}</span></td>
+    <td class="tsm tm">${m.joined}</td>
+    <td class="mono tok">+${m.com} USDT</td>
+    <td><span class="bdg bdg-ok">Active</span></td>
+  </tr>`).join('');
+}
+function switchRefTab(t,btn){
+  document.querySelectorAll('#p-referrals .tab').forEach(x=>x.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('rtab-hist').style.display=t==='history'?'':'none';
+  document.getElementById('rtab-mem').style.display=t==='members'?'':'none';
+}
+
+// ═══════════════════════════════════════
+// KYC WIZARD
+// ═══════════════════════════════════════
+let kStep=1;
+function initKYC(){kStep=1;renderKYC();}
+function renderKYC(){
+  const labels=['ข้อมูลส่วนตัว','ID Document','Selfie with ID','Proof of Address'];
+  document.getElementById('ksteps').innerHTML=labels.map((l,i)=>{
+    const n=i+1,cls=n<kStep?'done':n===kStep?'active':'pend';
+    return `${i>0?`<div class="ks-line ${n<=kStep?'done':''}"></div>`:''}
+    <div class="fc g4px" style="flex-direction:column;align-items:center;gap:4px;">
+      <div class="ks-num ${cls}">${n<kStep?'✓':n}</div>
+      <div class="ks-lbl ${n===kStep?'tg':'tm'}">${l}</div>
+    </div>`;
+  }).join('');
+  const c={
+    1:`<div class="fg"><label class="fl">ชื่อ-นามสกุล *</label><input class="fi" placeholder="ชื่อจริงตามบัตร"></div>
+       <div class="g2" style="gap:12px;"><div class="fg"><label class="fl">วันเกิด *</label><input type="date" class="fi"></div>
+       <div class="fg"><label class="fl">สัญชาติ *</label><select class="fi"><option>ไทย</option><option>อื่นๆ</option></select></div></div>
+       <div class="fg"><label class="fl">เบอร์โทร *</label><input class="fi" placeholder="+66xxxxxxxxx"></div>`,
+    2:`<div class="alrt alrt-i mb4">อัพโหลดบัตรประชาชน/หนังสือเดินทาง (ด้านหน้าและด้านหลัง)</div>
+       <div class="g2" style="gap:12px;">
+         <div class="fg"><label class="fl">ด้านหน้า</label><div class="uarea"><div style="font-size:2rem;">📄</div><div class="tsm tm mt2">อัพโหลดด้านหน้า</div></div></div>
+         <div class="fg"><label class="fl">ด้านหลัง</label><div class="uarea"><div style="font-size:2rem;">📄</div><div class="tsm tm mt2">อัพโหลดด้านหลัง</div></div></div>
+       </div>`,
+    3:`<div class="alrt alrt-i mb4">ถ่ายรูปตัวเองพร้อมถือบัตรให้ชัดเจน</div>
+       <div class="uarea" style="padding:3rem;"><div style="font-size:2rem;">🤳</div><div class="tsm tm mt2">Selfie with ID<br><span class="txs tm">หน้าตรง แสงดี ไม่สวมหมวก</span></div></div>`,
+    4:`<div class="alrt alrt-i mb4">บิลน้ำ/ไฟ หรือ Bank Statement ไม่เกิน 3 เดือน</div>
+       <div class="uarea" style="padding:3rem;"><div style="font-size:2rem;">📋</div><div class="tsm tm mt2">อัพโหลดเอกสารยืนยันที่อยู่</div></div>`,
+  };
+  document.getElementById('kstep-content').innerHTML=`
+    <div style="font-family:var(--fd);font-size:1rem;font-weight:700;margin-bottom:1.25rem;">ขั้นตอน ${kStep}: ${labels[kStep-1]}</div>
+    ${c[kStep]}
+    <div class="fc g8 mt4">
+      ${kStep>1?`<button class="btn btn-ghost" onclick="kStep--;renderKYC()">← ก่อนหน้า</button>`:''}
+      <button class="btn btn-gold" style="flex:1;" onclick="${kStep<4?'kStep++;renderKYC()':'submitKYC()'}">
+        ${kStep<4?'ถัดไป →':'📤 ส่งเอกสาร KYC'}
+      </button>
+    </div>`;
+}
+function submitKYC(){go('profile');alert('✅ ส่งเอกสาร KYC แล้ว!\nAdmin จะตรวจสอบภายใน 1-3 วันทำการ');}
+
+// ═══════════════════════════════════════
+// SELLER DASHBOARD
+// ═══════════════════════════════════════
+function initSD(){
+  const months=['ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.','ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.'];
+  const bars=[2100,3200,2800,4100,3800,5200,4600,3900,4800,5600,4200,6100];
+  const mx=Math.max(...bars);
+  document.getElementById('echart').innerHTML=bars.map((v,i)=>
+    `<div class="cbar" style="height:${Math.round((v/mx)*140)}px;background:${i===11?'var(--gold)':'rgba(240,185,11,.35)'};"></div>`
+  ).join('');
+  document.getElementById('echart-lbl').innerHTML=months.map(m=>`<span>${m}</span>`).join('');
+  document.getElementById('s-payouts').innerHTML=D.spayouts.map((p,i)=>{
+    const max=p.po==='45d'?45:60,pct=Math.round((1-p.days/max)*100);
+    return `<div class="card">
+      <div class="fc btwn mb2"><div style="font-size:13px;font-weight:600;">${p.prod}</div><span class="bdg ${p.po==='45d'?'bdg-warn':'bdg-ok'}">${p.po}</span></div>
+      <div class="mono tg" style="font-size:1.1rem;font-weight:700;">${p.amt.toLocaleString()} USDT</div>
+      <div class="txs tm mb2">${p.po==='45d'?'หลังหัก 10%':'เต็มจำนวน'}</div>
+      <div class="clbl">เหลืออีก ${p.days} วัน</div>
+      <div class="pbar mt2" style="height:8px;"><div class="pfill" style="width:${pct}%;background:${p.days<15?'var(--ok)':'var(--gold)'};"></div></div>
+    </div>`;
+  }).join('');
+}
+
+// ═══════════════════════════════════════
+// SELLER SHOP
+// ═══════════════════════════════════════
+function initSShop(){
+  document.getElementById('shop-prods').innerHTML=D.sprods.filter(p=>p.st==='approved').map(p=>
+    `<div class="pc"><div class="pc-img">${p.ico}</div>
+    <div class="pc-body"><div class="pc-name">${p.name}</div><div class="pc-price">${p.price.toLocaleString()} USDT</div>
+    <div class="ff-badge">✨ Funding Free</div><div class="txs tm mt2">${p.sales} ยอดขาย · Payout ${p.po}วัน</div></div></div>`
+  ).join('');
+}
+
+// ═══════════════════════════════════════
+// SELLER PRODUCTS
+// ═══════════════════════════════════════
+function initSProds(){
+  document.getElementById('spr-b').innerHTML=D.sprods.map(p=>`<tr>
+    <td><strong>${p.ico} ${p.name}</strong></td>
+    <td class="mono tg">${p.price.toLocaleString()}</td>
+    <td><span class="bdg ${p.po===45?'bdg-warn':'bdg-ok'}">${p.po} วัน (${p.po===45?'90%':'100%'})</span></td>
+    <td>${p.stock}</td>
+    <td>${p.st==='approved'?'<span class="bdg bdg-ok">✓ อนุมัติ</span>':p.st==='pending'?'<span class="bdg bdg-warn">⏳ รอ</span>':'<span class="bdg bdg-err">✗ ไม่อนุมัติ</span>'}</td>
+    <td class="mono">${p.sales}</td>
+    <td><button class="btn btn-ghost btn-sm" onclick="openM('m-addprod')">✏️ แก้ไข</button></td>
+  </tr>`).join('');
+}
+
+// ═══════════════════════════════════════
+// SELLER ORDERS
+// ═══════════════════════════════════════
+function filterSOrd(st,btn){
+  document.querySelectorAll('#sord-fbar .fbtn').forEach(b=>b.classList.remove('active'));
+  if(btn)btn.classList.add('active');
+  const rows=st==='all'?D.sords:D.sords.filter(o=>o.st===st);
+  document.getElementById('sord-b').innerHTML=rows.map(o=>{
+    let acts='';
+    if(o.st==='paid')acts=`<button class="btn btn-gold btn-sm" onclick="alert('ยืนยันจัดส่ง ${o.id}')">📦 ยืนยันจัดส่ง</button>`;
+    if(o.st==='exchange_requested')acts=`<button class="btn btn-inf btn-sm" onclick="alert('จัดการคำขอเปลี่ยน')">🔁 จัดการ</button>`;
+    return `<tr>
+      <td class="mono tg">${o.id}</td><td>${o.prod}</td><td class="tm">${o.buyer}</td>
+      <td class="mono">${o.amt.toLocaleString()} USDT</td>
+      <td><span class="bdg ${o.po==='45d'?'bdg-warn':'bdg-ok'}">${o.po}</span></td>
+      <td>${sb(o.st)}</td><td class="tsm tm">${o.date}</td><td>${acts}</td>
+    </tr>`;
+  }).join('')||nodata(8);
+}
+
+// ═══════════════════════════════════════
+// SELLER WALLET
+// ═══════════════════════════════════════
+function initSW(){
+  document.getElementById('swb').innerHTML=D.stxs.map(t=>{
+    const plus=String(t.amt).startsWith('+');
+    return `<tr>
+      <td class="tsm tm">${t.date}</td>
+      <td><span class="bdg ${t.type.includes('Payout')?'bdg-ok':'bdg-err'}">${t.type}</span></td>
+      <td class="tsm">${t.desc}</td>
+      <td class="mono ${plus?'tok':'terr'}" style="font-weight:600;">${t.amt} USDT</td>
+      <td>${t.status==='success'?'<span class="bdg bdg-ok">✓</span>':'<span class="bdg bdg-warn">⏳</span>'}</td>
+    </tr>`;
+  }).join('');
+}
+
+// ═══════════════════════════════════════
+// SELLER ANALYTICS
+// ═══════════════════════════════════════
+function initSA(){
+  document.getElementById('top-prods').innerHTML=[
+    {name:'MacBook Pro M3',sales:12,rev:39588},
+    {name:'MacBook Air M2',sales:7,rev:12593},
+    {name:'iPad Pro 12.9"',sales:3,rev:2997},
+  ].map(p=>`<div class="fc btwn mb2"><div><div style="font-size:13px;font-weight:500;">${p.name}</div><div class="txs tm">${p.sales} ยอดขาย</div></div><div class="mono tg">${p.rev.toLocaleString()}</div></div>`).join('');
+  document.getElementById('pay-hist').innerHTML=[
+    {ord:'ORD-10038',amt:1349.10,po:'45d',date:'2025-04-20',st:'paid'},
+    {ord:'ORD-10029',amt:349.00,po:'60d',date:'2025-05-10',st:'pending'},
+  ].map(p=>`<div class="fc btwn mb2"><div><div class="mono tg txs">${p.ord}</div><div class="txs tm">${p.date} · ${p.po}</div></div><div class="fc g8"><span class="mono ${p.st==='paid'?'tok':'tg'}">${p.amt}</span>${p.st==='paid'?'<span class="bdg bdg-ok">✓</span>':'<span class="bdg bdg-warn">⏳</span>'}</div></div>`).join('');
+}
+
+// ═══════════════════════════════════════
+// SELLER APPLY
+// ═══════════════════════════════════════
+function submitSA(){go('profile');alert('📤 ส่งใบสมัครแล้ว!\nAdmin จะตรวจสอบและแจ้งผลภายใน 1-3 วันทำการ\nคุณจะได้รับ Notification เมื่อมีการอัพเดต');}
+
+// ═══════════════════════════════════════
+// PAYOUT OPTION
+// ═══════════════════════════════════════
+function selPO(d,el){
+  selPO_=d;
+  document.querySelectorAll('#popt-cards .popt').forEach(c=>c.classList.remove('sel'));
+  el.classList.add('sel');
+  updatePOPreview();
+}
+function updatePOPreview(){
+  const p=parseFloat(document.getElementById('pp-price').value)||1000;
+  const el=document.getElementById('po-prev');
+  if(!el)return;
+  if(selPO_===45)el.textContent=`📍 ราคา ${p.toLocaleString()} USDT → คุณได้รับ ${(p*.9).toLocaleString()} USDT (ตัด ${(p*.1).toLocaleString()} Market Fee)`;
+  else el.textContent=`📍 ราคา ${p.toLocaleString()} USDT → คุณได้รับ ${p.toLocaleString()} USDT เต็มจำนวน`;
+}
+function submitProd(){
+  closeM('m-addprod');
+  D.sprods.push({id:'P_NEW',name:'สินค้าใหม่',price:100,po:selPO_,stock:1,st:'pending',sales:0,ico:'📦'});
+  alert('📤 ส่งสินค้าเพื่อตรวจสอบแล้ว!\nสถานะ: รอ Admin อนุมัติ\nจะได้รับ Notification เมื่ออนุมัติ/ปฏิเสธ');
+}
+
+// ═══════════════════════════════════════
+// AUTH
+// ═══════════════════════════════════════
+function swAuthTab(t,btn){
+  document.querySelectorAll('#m-login .tab').forEach(x=>x.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('auth-login').style.display=t==='login'?'':'none';
+  document.getElementById('auth-reg').style.display=t==='register'?'':'none';
+}
+function doLogin(){closeM('m-login');alert('✅ เข้าสู่ระบบสำเร็จ');}
+function doReg(){
+  const ref=document.getElementById('ref-code').value;
+  closeM('m-login');
+  alert(`✅ สมัครสมาชิกสำเร็จ!\n${ref?`Referral Code: ${ref}`:' ไม่มี Referral Code — Commission อยู่ใน TCC Fund'}\nกรุณายืนยัน Email และทำ KYC`);
+}
+
+// ═══════════════════════════════════════
+// ORDER ACTIONS
+// ═══════════════════════════════════════
+function submitEx(){closeM('m-exchange');alert('🔁 ส่งคำขอเปลี่ยนแล้ว!\nSeller จะดำเนินการ\nCountdown จะ Reset เมื่อได้รับสินค้าใหม่');}
+function confirmCancel(){closeM('m-cancel');alert('❌ ยกเลิกสำเร็จ\nUSDP คืนเข้า Wallet ทันที\nหมายเหตุ: Funding Free Right ที่ใช้ไปไม่ได้คืน');}
+function exportCSV(){alert('📥 Export CSV: ระบบดาวน์โหลดไฟล์ CSV รายการทั้งหมด');}
+
+// ═══════════════════════════════════════
+// COUNTDOWN TIMER
+// ═══════════════════════════════════════
+function startCD(id,ts){
+  if(cdTimers[id])clearInterval(cdTimers[id]);
+  function tick(){
+    const el=document.getElementById(id);
+    if(!el){clearInterval(cdTimers[id]);return;}
+    const diff=ts-Date.now();
+    if(diff<=0){el.innerHTML='<span class="terr">หมดเวลา</span>';clearInterval(cdTimers[id]);return;}
+    const d=Math.floor(diff/864e5),h=Math.floor((diff%864e5)/36e5),m=Math.floor((diff%36e5)/6e4),s=Math.floor((diff%6e4)/1e3);
+    el.innerHTML=`
+      <div class="cdu"><span class="cdn">${pad(d)}</span><div class="cdl">วัน</div></div><span class="cds">:</span>
+      <div class="cdu"><span class="cdn">${pad(h)}</span><div class="cdl">ชม.</div></div><span class="cds">:</span>
+      <div class="cdu"><span class="cdn">${pad(m)}</span><div class="cdl">นาที</div></div><span class="cds">:</span>
+      <div class="cdu"><span class="cdn">${pad(s)}</span><div class="cdl">วิ.</div></div>`;
+  }
+  tick();cdTimers[id]=setInterval(tick,1000);
+}
+function pad(n){return String(n).padStart(2,'0');}
+
+// ═══════════════════════════════════════
+// HELPERS
+// ═══════════════════════════════════════
+function sb(s){
+  const m={paid:'bdg-warn',confirmed:'bdg-inf',completed:'bdg-ok',cancelled:'bdg-err',exchange_requested:'bdg-orange'};
+  const l={paid:'รอยืนยัน',confirmed:'ยืนยันแล้ว',completed:'สำเร็จ',cancelled:'ยกเลิก',exchange_requested:'ขอเปลี่ยน'};
+  return `<span class="bdg ${m[s]||'bdg-muted'}">${l[s]||s}</span>`;
+}
+function nodata(c){return `<tr><td colspan="${c}" style="text-align:center;padding:2rem;color:var(--t3);">ไม่มีรายการ</td></tr>`;}
+function renderPag(id,total,cur,cb){
+  const el=document.getElementById(id);
+  if(!el||total<=1){if(el)el.innerHTML='';return;}
+  el.innerHTML=Array.from({length:total},(_,i)=>i+1).map(p=>
+    `<button class="pbtn ${p===cur?'active':''}" onclick="(${cb.toString()})(${p})">${p}</button>`
+  ).join('');
+}
+function cp(t){navigator.clipboard.writeText(t).catch(()=>{});alert('คัดลอกแล้ว!');}
+function openM(id){document.getElementById(id).classList.add('open');}
+function closeM(id){document.getElementById(id).classList.remove('open');}
+document.querySelectorAll('.mover').forEach(m=>m.addEventListener('click',e=>{if(e.target===m)m.classList.remove('open');}));
+
+// ═══════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════
+renderNav();
+renderBell();
+initHome();
+</script>
+</body>
+</html>
